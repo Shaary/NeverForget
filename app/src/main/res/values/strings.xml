@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Never Forget</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="grudge_title_hint">Enter a title for the grudge</string>
+    <string name="grudge_title_label">Title</string>
+    <string name="grudge_details_label">Details</string>
+    <string name="grudge_remind_label">Remind me</string>
+    <string name="grudge_revenge_label">Revenge</string>
+</resources>

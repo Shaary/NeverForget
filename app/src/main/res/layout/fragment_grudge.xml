@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.GrudgeFragment"
+    android:orientation="vertical"
+    android:layout_margin="16dp">
+
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_title_label" />
+
+    <EditText
+        android:id="@+id/grudge_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/grudge_title_hint"
+        android:inputType="textPersonName" />
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_details_label" />
+
+    <Button
+        android:id="@+id/grudge_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/grudge_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_remind_label" />
+
+    <CheckBox
+        android:id="@+id/grudge_revenge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_revenge_label" />
+
+
+</LinearLayout>
