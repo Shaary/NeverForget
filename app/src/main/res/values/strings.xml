@@ -8,4 +8,18 @@
     <string name="grudge_details_label">Details</string>
     <string name="grudge_remind_label">Remind me</string>
     <string name="grudge_revenge_label">Revenge</string>
+    <string name="date_picker_title">Date of grudge:</string>
+    <string name="new_grudge">New Grudge</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle_format">%1$d grudges</string>
+    <string name="grudge_forgiven_text">Forgiven but not forgotten</string>
+    <string name="grudge_choose_victim_button_text">Choose victim</string>
+    <string name="grudge_send_grudge_button_text">Send grudge</string>
+    <string name="grudge_message_format">%1$s, I hold a grudge on you. %2$s on %3$s. %4$s</string>
+    <string name="grudge_delete">delete</string>
+    <string name="send_report">Send grudge report via</string>
+    <string name="grudge_report_subject">Never Forget Grudge Report</string>
+    <string name="grudge_forgiven_report">But I forgive you</string>
+    <string name="grudge_not_forgiven_report">I don\'t forgive you</string>
 </resources>

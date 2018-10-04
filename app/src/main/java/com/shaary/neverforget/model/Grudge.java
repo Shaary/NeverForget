@@ -14,10 +14,19 @@ public class Grudge {
     private int years;
     private boolean remind;
     private boolean isRevenge;
+    private boolean isRevenged;
+    private boolean isForgiven = false;
+    private String victim;
+    private String description;
 
     public Grudge() {
         this.id = UUID.randomUUID();
-        this.date = new Date();
+        date = new Date();
+    }
+
+    public Grudge(UUID id) {
+        this.id = id;
+        date = new Date();
     }
 
     public UUID getId() {
@@ -32,7 +41,11 @@ public class Grudge {
         this.title = title;
     }
 
-    public String getDate() {
+    public Date getDate() {
+        return date;
+    }
+
+    public String getFormattedDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
         return simpleDateFormat.format(date);
     }
@@ -63,5 +76,37 @@ public class Grudge {
 
     public void setRevenge(boolean revenge) {
         isRevenge = revenge;
+    }
+
+    public boolean isRevenged() {
+        return isRevenged;
+    }
+
+    public void setRevenged(boolean revenged) {
+        isRevenged = revenged;
+    }
+
+    public boolean isForgiven() {
+        return isForgiven;
+    }
+
+    public void setForgiven(boolean forgiven) {
+        isForgiven = forgiven;
+    }
+
+    public String getVictim() {
+        return victim;
+    }
+
+    public void setVictim(String victim) {
+        this.victim = victim;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

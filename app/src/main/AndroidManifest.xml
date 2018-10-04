@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.GrudgePagerActivity">
+            android:name=".controller.GrudgePagerActivity"
+            android:parentActivityName=".controller.GrudgeListActivity">
         </activity>
     </application>
 

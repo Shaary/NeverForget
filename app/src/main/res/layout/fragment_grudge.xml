@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/grudge_title_hint"
-        android:inputType="textPersonName" />
+        android:inputType="textCapSentences|textMultiLine" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
@@ -28,6 +28,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/grudge_details_label" />
+
+    <EditText
+        android:id="@+id/grudge_description_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint='Describe in form "you did smth wrong"'
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/grudge_date_button"
@@ -45,6 +53,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/grudge_revenge_label" />
+
+    <CheckBox
+        android:id="@+id/grudge_forgive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Forgive" />
+
+    <TextView
+        android:id="@+id/grudge_forgiven_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_forgiven_text"
+        android:visibility="invisible"
+        android:textStyle="bold|italic" />
+
+    <Button
+        android:id="@+id/grudge_victim_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_choose_victim_button_text" />
+
+    <Button
+        android:id="@+id/grudge_send_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grudge_send_grudge_button_text" />
 
 
 </LinearLayout>

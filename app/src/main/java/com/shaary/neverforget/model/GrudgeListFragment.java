@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,8 +29,10 @@ import butterknife.ButterKnife;
 public class GrudgeListFragment extends Fragment {
 
     private static final String TAG = GrudgeListFragment.class.getSimpleName();
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     private GrudgeAdapter adapter;
+    private boolean isSubtitleVisible;
 
     @Nullable
     @Override
@@ -35,6 +41,10 @@ public class GrudgeListFragment extends Fragment {
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Log.d(TAG, "onCreateView: called");
+
+        if (savedInstanceState != null) {
+            isSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
 
         updateUI();
         return view;
@@ -51,14 +61,83 @@ public class GrudgeListFragment extends Fragment {
         } else {
 
             //TODO: use DiffUtil
+            adapter.setGrudges(grudges);
             adapter.notifyDataSetChanged();
+        }
+        updateSubtitle();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, isSubtitleVisible);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_grudge_list, menu);
+
+        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+        if (isSubtitleVisible) {
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        } else {
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_grudge:
+                Grudge grudge = new Grudge();
+                GrudgePit.get(getActivity()).addGrudge(grudge);
+                Intent intent = GrudgePagerActivity
+                        .newIntent(getActivity(), grudge.getId());
+                startActivity(intent);
+                return true;
+
+            case R.id.show_subtitle:
+                isSubtitleVisible = !isSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                updateSubtitle();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    //TODO: find a way to make the boilerplate code for the holders smaller
+    private void updateSubtitle() {
+        GrudgePit grudgePit = GrudgePit.get(getActivity());
+        int grudgeCount = grudgePit.getGrudges().size();
+        String subtitle = getString(R.string.subtitle_format, grudgeCount);
 
+        if(!isSubtitleVisible) {
+            subtitle = null;
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
+    }
+
+    //TODO: find a way to make the boilerplate code for the holders smaller
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     //Holder for minor grunges
     private class GrudgeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
         TextView titleTextView;
         TextView dateTextView;
         ImageView revengedImageView;
@@ -76,7 +155,7 @@ public class GrudgeListFragment extends Fragment {
         public void bind(Grudge grudge) {
             this.grudge = grudge;
             titleTextView.setText(grudge.getTitle());
-            dateTextView.setText(grudge.getDate());
+            dateTextView.setText(grudge.getFormattedDate());
             revengedImageView.setVisibility(grudge.isRevenge() ? View.VISIBLE : View.GONE);
 
         }
@@ -86,16 +165,11 @@ public class GrudgeListFragment extends Fragment {
             Intent intent = GrudgePagerActivity.newIntent(getActivity(), grudge.getId());
             startActivity(intent);
         }
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateUI();
     }
-
     //Holder for big grunges
     private class SeriousGrudgeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
 
         TextView titleTextView;
         TextView dateTextView;
@@ -114,7 +188,7 @@ public class GrudgeListFragment extends Fragment {
         public void bind(Grudge grudge) {
             this.grudge = grudge;
             titleTextView.setText(grudge.getTitle());
-            dateTextView.setText(grudge.getDate());
+            dateTextView.setText(grudge.getFormattedDate());
             revengedImageView.setVisibility(grudge.isRevenge() ? View.VISIBLE : View.GONE);
         }
 
@@ -173,6 +247,10 @@ public class GrudgeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return grudges.size();
+        }
+
+        public void setGrudges(List<Grudge> grudges) {
+            this.grudges = grudges;
         }
     }
 }
