@@ -2,15 +2,20 @@ package com.shaary.neverforget.view;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,14 +28,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.controller.DatePickerFragment;
+import com.shaary.neverforget.controller.PictureUtils;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -47,9 +57,12 @@ public class GrudgeFragment extends Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
+    private static final int REQUEST_PHOTO = 2;
     private static final String TAG = GrudgeFragment.class.getSimpleName();
 
     private Grudge grudge;
+    private File photoFile;
+    private Callbacks callbacks;
 
     @BindView(R.id.grudge_title) EditText titleField;
     @BindView(R.id.grudge_description_text) EditText descriptionField;
@@ -60,6 +73,9 @@ public class GrudgeFragment extends Fragment {
     @BindView(R.id.grudge_revenge) CheckBox revengeCheckBox;
     @BindView(R.id.grudge_forgive) CheckBox forgiveCheckBox;
     @BindView(R.id.grudge_forgiven_text) TextView forgiveText;
+    @BindView(R.id.grudge_image_view) ImageView grudgeImage;
+    @BindView(R.id.grudge_photo_button) ImageButton photoButton;
+
 
     public static GrudgeFragment newInstance(UUID grudgeId) {
         Bundle args = new Bundle();
@@ -69,6 +85,20 @@ public class GrudgeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    public interface Callbacks {
+        void onGrudgeUpdated(Grudge grudge);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callbacks = (Callbacks) context;
+    }
+
+    //TODO: make the class smaller
+    //TODO: add scroll view to the layout
+    //TODO: add request for using camera and storage and contact list
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +116,7 @@ public class GrudgeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 grudge.setTitle(s.toString());
+                updateGrudge();
             }
 
             @Override
@@ -103,9 +134,8 @@ public class GrudgeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d(TAG, "onTextChanged: changes text " + s.toString());
                 grudge.setDescription(s.toString());
-                Log.d(TAG, "onTextChanged: description " + grudge.getDescription());
+                updateGrudge();
             }
 
             @Override
@@ -144,11 +174,17 @@ public class GrudgeFragment extends Fragment {
         });
 
         remindCheckBox.setChecked(grudge.isRemind());
-        remindCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> grudge.setRemind(isChecked));
+        remindCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            grudge.setRemind(isChecked);
+            updateGrudge();
+        });
 
         //If isRevengeTrue changes view of the grudge
         revengeCheckBox.setChecked(grudge.isRevenge());
-        revengeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> grudge.setRevenge(isChecked));
+        revengeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            grudge.setRevenge(isChecked);
+            updateGrudge();
+        });
 
         forgiveCheckBox.setChecked(grudge.isForgiven());
         //TODO: DRY the code
@@ -165,12 +201,40 @@ public class GrudgeFragment extends Fragment {
                 revengeCheckBox.setEnabled(true);
             }}));
 
+
+
         //TODO: make 2 options: choose from contact list or write the name down
         //Checks if there are apps to open the intent
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
             victimButton.setEnabled(false);
         }
+
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        boolean canTakePhoto = photoFile != null &&
+                captureImage.resolveActivity(packageManager) != null;
+        photoButton.setEnabled(canTakePhoto);
+
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = FileProvider.getUriForFile(getActivity(),
+                        "com.shaary.android.grudgeintent.fileprovider",
+                        photoFile);
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+                List<ResolveInfo> cameraActivities = getActivity()
+                        .getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
+
+                for (ResolveInfo activity : cameraActivities) {
+                    getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                }
+                startActivityForResult(captureImage, REQUEST_PHOTO);
+            }
+        });
+
+        updateGrudgeImage();
 
         return view;
     }
@@ -180,6 +244,7 @@ public class GrudgeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID grudgeId = (UUID) getArguments().getSerializable(ARG_GRUDGE_ID);
         grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
+        photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
         setHasOptionsMenu(true);
     }
 
@@ -192,6 +257,7 @@ public class GrudgeFragment extends Fragment {
             Date date = (Date) data
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             grudge.setDate(date);
+            updateGrudge();
             updateDate();
         } else if (requestCode == REQUEST_CONTACT && data != null){
             Uri contactUri = data.getData();
@@ -212,11 +278,19 @@ public class GrudgeFragment extends Fragment {
                 cursor.moveToFirst();
                 String victim = cursor.getString(0);
                 grudge.setVictim(victim);
+                updateGrudge();
                 victimButton.setText(victim);
             } finally {
                 cursor.close();
             }
 
+        } else if (requestCode == REQUEST_PHOTO) {
+            Uri uri = FileProvider.getUriForFile(getActivity(),
+                    "com.shaary.android.grudgeintent.fileprovider",
+                    photoFile);
+            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateGrudge();
+            updateGrudgeImage();
         }
     }
 
@@ -228,8 +302,28 @@ public class GrudgeFragment extends Fragment {
                 .updateGrudge(grudge);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
+    }
+
     private void updateDate() {
         dateButton.setText(grudge.getFormattedDate());
+    }
+
+    private void updateGrudge() {
+        GrudgePit.get(getActivity()).updateGrudge(grudge);
+        callbacks.onGrudgeUpdated(grudge);
+    }
+
+    private void updateGrudgeImage() {
+        if (photoFile == null || !photoFile.exists()) {
+            grudgeImage.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), getActivity());
+            grudgeImage.setImageBitmap(bitmap);
+        }
     }
 
     private String getGrudgeReport() {

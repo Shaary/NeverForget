@@ -22,7 +22,8 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GrudgePagerActivity extends AppCompatActivity {
+public class GrudgePagerActivity extends AppCompatActivity
+        implements GrudgeFragment.Callbacks{
 
     private static final String EXTRA_GRUDGE_ID = "com.shaary.android.grudgeintent.grudge_id";
 
@@ -101,5 +102,10 @@ public class GrudgePagerActivity extends AppCompatActivity {
         toFirstButton.setOnClickListener(v -> viewPager.setCurrentItem(0));
 
         toLastButton.setOnClickListener(v -> viewPager.setCurrentItem(grudges.size()-1));
+    }
+
+    @Override
+    public void onGrudgeUpdated(Grudge grudge) {
+
     }
 }

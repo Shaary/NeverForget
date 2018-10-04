@@ -9,6 +9,7 @@ import com.shaary.neverforget.database.GrudgeBaseHelper;
 import com.shaary.neverforget.database.GrudgeCursorWrapper;
 import com.shaary.neverforget.database.GrudgeDbSchema.GrudgeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +66,11 @@ public class GrudgePit {
         } finally {
             cursor.close();
         }
+    }
+
+    public File getPhotoFile(Grudge grudge) {
+        File filesDir = context.getFilesDir();
+        return new File(filesDir, grudge.getPhotoFilename());
     }
 
     public void addGrudge(Grudge grudge) {

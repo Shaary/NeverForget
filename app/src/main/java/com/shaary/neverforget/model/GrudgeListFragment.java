@@ -1,5 +1,6 @@
 package com.shaary.neverforget.model;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,17 @@ public class GrudgeListFragment extends Fragment {
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     private GrudgeAdapter adapter;
     private boolean isSubtitleVisible;
+    private Callbacks callbacks;
+
+    public interface Callbacks {
+        void onGrudgeSelected(Grudge grudge);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callbacks = (Callbacks) context;
+    }
 
     @Nullable
     @Override
@@ -50,7 +62,13 @@ public class GrudgeListFragment extends Fragment {
         return view;
     }
 
-    private void updateUI() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    public void updateUI() {
         Log.d(TAG, "updateUI: called");
         GrudgePit grudgePit = GrudgePit.get(getActivity());
         List<Grudge> grudges = grudgePit.getGrudges();
@@ -73,6 +91,11 @@ public class GrudgeListFragment extends Fragment {
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, isSubtitleVisible);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
+    }
 
     @Override
     public void onResume() {
@@ -100,9 +123,8 @@ public class GrudgeListFragment extends Fragment {
             case R.id.new_grudge:
                 Grudge grudge = new Grudge();
                 GrudgePit.get(getActivity()).addGrudge(grudge);
-                Intent intent = GrudgePagerActivity
-                        .newIntent(getActivity(), grudge.getId());
-                startActivity(intent);
+                updateUI();
+                callbacks.onGrudgeSelected(grudge);
                 return true;
 
             case R.id.show_subtitle:
@@ -129,12 +151,8 @@ public class GrudgeListFragment extends Fragment {
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
+
     //TODO: find a way to make the boilerplate code for the holders smaller
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
     //Holder for minor grunges
     private class GrudgeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -162,8 +180,7 @@ public class GrudgeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = GrudgePagerActivity.newIntent(getActivity(), grudge.getId());
-            startActivity(intent);
+            callbacks.onGrudgeSelected(grudge);
         }
 
     }
@@ -194,8 +211,7 @@ public class GrudgeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = GrudgePagerActivity.newIntent(getActivity(), grudge.getId());
-            startActivity(intent);
+            callbacks.onGrudgeSelected(grudge);
         }
     }
 

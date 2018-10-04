@@ -109,4 +109,8 @@ public class Grudge {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
 }
