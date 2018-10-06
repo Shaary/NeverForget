@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint='Describe in form "you did smth wrong"'
+        android:hint="@string/grudge_descrip_hint_text"
         android:inputType="textPersonName"
         android:layout_below="@id/grudge_description_label"/>
 
@@ -71,7 +71,7 @@
         android:id="@+id/grudge_forgive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Forgive"
+        android:text="@string/grudge_forgive_checkbox"
         android:layout_below="@id/grudge_revenge"/>
 
     <TextView

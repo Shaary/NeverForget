@@ -29,14 +29,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="To the first" />
+            android:text="@string/grudge_to_the_first_button" />
 
         <Button
             android:id="@+id/grudge_last_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="To the last" />
+            android:text="@string/grudge_to_the_last_button" />
     </LinearLayout>
 
 

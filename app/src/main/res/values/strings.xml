@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Never Forget</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="grudge_title_hint">Enter a title for the grudge</string>
     <string name="grudge_title_label">Title</string>
@@ -17,9 +16,13 @@
     <string name="grudge_choose_victim_button_text">Choose victim</string>
     <string name="grudge_send_grudge_button_text">Send grudge</string>
     <string name="grudge_message_format">%1$s, I hold a grudge on you. %2$s on %3$s. %4$s</string>
-    <string name="grudge_delete">delete</string>
+    <string name="grudge_delete">Delete</string>
     <string name="send_report">Send grudge report via</string>
     <string name="grudge_report_subject">Never Forget Grudge Report</string>
     <string name="grudge_forgiven_report">But I forgive you</string>
     <string name="grudge_not_forgiven_report">I don\'t forgive you</string>
+    <string name="grudge_to_the_first_button">To the first</string>
+    <string name="grudge_to_the_last_button">To the last</string>
+    <string name="grudge_descrip_hint_text">Describe in form you did smth wrong</string>
+    <string name="grudge_forgive_checkbox">Forgive</string>
 </resources>

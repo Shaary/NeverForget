@@ -18,17 +18,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/crime_title_text"
+            android:id="@+id/grudge_title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Grudge Title"
+            tools:text="Grudge Title"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/crime_date_text"
+            android:id="@+id/grudge_date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Grudge Date"
+            tools:text="Grudge Date"
             android:textStyle="bold" />
     </LinearLayout>
 
