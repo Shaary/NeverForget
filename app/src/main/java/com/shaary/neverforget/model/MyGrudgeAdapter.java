@@ -14,7 +14,7 @@ import com.shaary.neverforget.R;
 import java.util.List;
 
 public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrudgeViewHolder> {
-    //TODO: make onClick work
+
     private static final String TAG = MyGrudgeAdapter.class.getSimpleName();
     private List<Grudge> grudges;
     private Listener listener;
@@ -61,6 +61,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
                 break;
             default: view = inflater.inflate(R.layout.list_item_grudge, parent, false);
         }
+
         return new MyGrudgeViewHolder(view);
     }
 
@@ -74,7 +75,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
         return grudges.size();
     }
 
-    public class MyGrudgeViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    public class MyGrudgeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView grudgeTitle;
         private TextView grudgeDate;
         private ImageView revengeImage;
@@ -82,6 +83,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
 
         public MyGrudgeViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             grudgeTitle = itemView.findViewById(R.id.grudge_title_text);
             grudgeDate = itemView.findViewById(R.id.grudge_date_text);
             revengeImage = itemView.findViewById(R.id.revenged_image_view);

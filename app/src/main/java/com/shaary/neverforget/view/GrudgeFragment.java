@@ -1,6 +1,7 @@
 package com.shaary.neverforget.view;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,6 +60,9 @@ public class GrudgeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO = 2;
+    private static final int REQUEST_STORAGE = 3;
+    private static final int REQUEST_SMS = 4;
+
     private static final String TAG = GrudgeFragment.class.getSimpleName();
 
     private Grudge grudge;
@@ -97,8 +102,8 @@ public class GrudgeFragment extends Fragment {
     }
 
     //TODO: make the class smaller
-    //TODO: add scroll view to the layout
     //TODO: add request for using camera and storage and contact list
+    //TODO: make the button position prettier
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,6 +149,7 @@ public class GrudgeFragment extends Fragment {
             }
         });
 
+        //Picks victim from contact list
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
                 ContactsContract.Contacts.CONTENT_URI);
         victimButton.setOnClickListener(v -> startActivityForResult(pickContact, REQUEST_CONTACT));
@@ -164,6 +170,9 @@ public class GrudgeFragment extends Fragment {
             dialog.show(fragmentManager, DIALOG_DATE);
         });
 
+        //TODO: make a time checker
+
+        //Sends intent to message sending apps
         sendButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
@@ -187,21 +196,11 @@ public class GrudgeFragment extends Fragment {
         });
 
         forgiveCheckBox.setChecked(grudge.isForgiven());
-        //TODO: DRY the code
-        if(grudge.isForgiven()) {
-            forgiveText.setVisibility(View.VISIBLE);
-            revengeCheckBox.setEnabled(false);
-        }
+
+        setBoxVisibility(forgiveText, revengeCheckBox, grudge.isForgiven());
+
         forgiveCheckBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {grudge.setForgiven(isChecked);
-            if(grudge.isForgiven()) {
-                forgiveText.setVisibility(View.VISIBLE);
-                revengeCheckBox.setEnabled(false);
-            } else  {
-                forgiveText.setVisibility(View.INVISIBLE);
-                revengeCheckBox.setEnabled(true);
-            }}));
-
-
+            setBoxVisibility(forgiveText, revengeCheckBox, grudge.isForgiven());}));
 
         //TODO: make 2 options: choose from contact list or write the name down
         //Checks if there are apps to open the intent
@@ -215,28 +214,33 @@ public class GrudgeFragment extends Fragment {
         boolean canTakePhoto = photoFile != null &&
                 captureImage.resolveActivity(packageManager) != null;
         photoButton.setEnabled(canTakePhoto);
+        photoButton.setOnClickListener(v -> {
+            Uri uri = FileProvider.getUriForFile(getActivity(),
+                    "com.shaary.android.grudgeintent.fileprovider",
+                    photoFile);
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
-        photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = FileProvider.getUriForFile(getActivity(),
-                        "com.shaary.android.grudgeintent.fileprovider",
-                        photoFile);
-                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            List<ResolveInfo> cameraActivities = getActivity()
+                    .getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
 
-                List<ResolveInfo> cameraActivities = getActivity()
-                        .getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
-
-                for (ResolveInfo activity : cameraActivities) {
-                    getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                }
-                startActivityForResult(captureImage, REQUEST_PHOTO);
+            for (ResolveInfo activity : cameraActivities) {
+                getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             }
+            startActivityForResult(captureImage, REQUEST_PHOTO);
         });
 
         updateGrudgeImage();
-
         return view;
+    }
+
+    private void setBoxVisibility(TextView textView, CheckBox checkBox, boolean isVisible) {
+        if (isVisible) {
+            textView.setVisibility(View.VISIBLE);
+            checkBox.setEnabled(false);
+        } else {
+            textView.setVisibility(View.INVISIBLE);
+            checkBox.setEnabled(true);
+        }
     }
 
     @Override
@@ -284,13 +288,16 @@ public class GrudgeFragment extends Fragment {
                 cursor.close();
             }
 
-        } else if (requestCode == REQUEST_PHOTO) {
+        } else if (requestCode == REQUEST_PHOTO && verifyCameraAndStorage()) {
             Uri uri = FileProvider.getUriForFile(getActivity(),
                     "com.shaary.android.grudgeintent.fileprovider",
                     photoFile);
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             updateGrudge();
             updateGrudgeImage();
+        } else if (requestCode == REQUEST_PHOTO && !verifyCameraAndStorage()) {
+            requestPermissions(new String[] {Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, 11);
         }
     }
 
@@ -364,5 +371,17 @@ public class GrudgeFragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean verifyCameraAndStorage() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                        PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(new String[] {Manifest.permission.CAMERA,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE}, 11);
+            return false;
+        }
+        return true;
     }
 }
