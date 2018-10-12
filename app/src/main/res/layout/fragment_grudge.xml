@@ -9,8 +9,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".view.GrudgeFragment"
+        tools:context=".controller.GrudgeFragment"
         android:orientation="vertical"
+        android:id="@+id/fragment_grudge_relative_layout"
         android:padding="16dp">
 
 

@@ -7,7 +7,6 @@ import android.util.Log;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgeListFragment;
-import com.shaary.neverforget.view.GrudgeFragment;
 
 public class GrudgeListActivity extends SingleFragmentActivity
         implements GrudgeListFragment.Callbacks, GrudgeFragment.Callbacks{

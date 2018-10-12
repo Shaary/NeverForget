@@ -43,6 +43,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
         return 0;
     }
 
+    //TODO: change separate views for background change
     @NonNull
     @Override
     public MyGrudgeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
