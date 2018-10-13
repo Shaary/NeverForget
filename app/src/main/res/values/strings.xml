@@ -25,4 +25,12 @@
     <string name="grudge_to_the_last_button">To the last</string>
     <string name="grudge_descrip_hint_text">Describe in form you did smth wrong</string>
     <string name="grudge_forgive_checkbox">Forgive</string>
+    <string name="explanation_default_message">It\'ll do you good</string>
+    <string name="explanation_default_title">We need power</string>
+    <string name="explanation_contact_message">This will save you from typing the name. But the app will work without it</string>
+    <string name="explanation_contact_title">Allow access to read contacts?</string>
+    <string name="explanation_photo_and_storage_message">This will allow you to take and save the image of your grudge</string>
+    <string name="explanation_photo_and_storage_title">Allow access to take and save photo?</string>
+    <string name="explanation_sms_message">This will allow you to send grudges to your victims by SMS and other services</string>
+    <string name="explanation_sms_title">Allow access to send messages?</string>
 </resources>

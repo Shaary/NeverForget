@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +37,7 @@ import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 import com.shaary.neverforget.view.ExplanationDialog;
+import com.shaary.neverforget.view.VictimChooserDialogFragment;
 
 import java.io.File;
 import java.util.Date;
@@ -106,7 +105,6 @@ public class GrudgeFragment extends Fragment {
     }
 
     //TODO: make the class smaller
-    //TODO: add request for using camera and storage and contact list
     //TODO: make the button position prettier
 
     @Override
@@ -156,7 +154,9 @@ public class GrudgeFragment extends Fragment {
         //Picks victim from contact list
 
         victimButton.setOnClickListener(v -> {
-            requestPermissions(new String[] {Manifest.permission.READ_CONTACTS}, REQUEST_CONTACT);
+            VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment();
+            dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
+            dialogFragment.show(getFragmentManager(), "victim");
             });
 
         if (grudge.getVictim() != null) {
@@ -251,30 +251,9 @@ public class GrudgeFragment extends Fragment {
             updateGrudge();
             updateDate();
         } else if (requestCode == REQUEST_CONTACT && data != null){
-            Uri contactUri = data.getData();
-            //Specify which fields you want to query to return values for
-            String[] queryFields = new String[] {
-                    ContactsContract.Contacts.DISPLAY_NAME
-            };
-            //Performs query - the contactUri is like a "where" clause
-            Cursor cursor = getActivity().getContentResolver()
-                            .query(contactUri, queryFields, null, null, null);
-
-            try {
-                //Double check the results
-                if (cursor.getCount() == 0) {
-                    return;
-                }
-                //Pull out the first column of the first row of data
-                cursor.moveToFirst();
-                String victim = cursor.getString(0);
-                grudge.setVictim(victim);
-                updateGrudge();
-                victimButton.setText(victim);
-            } finally {
-                cursor.close();
-            }
-
+            grudge.setVictim(data.getStringExtra("victim"));
+            updateGrudge();
+            victimButton.setText(data.getStringExtra("victim"));
         } else if (requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getActivity(),
                     "com.shaary.android.grudgeintent.fileprovider",
@@ -355,11 +334,6 @@ public class GrudgeFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean verifyCameraAndStorage() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
     private void openSettings() {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -401,25 +375,6 @@ public class GrudgeFragment extends Fragment {
                             ExplanationDialog dialog = ExplanationDialog.newInstance(new String[]{Manifest.permission.CAMERA,
                                     Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PHOTO_AND_STORAGE);
                             dialog.show(getFragmentManager(), "explanation");
-                        }
-                    }
-                    break;
-                case REQUEST_CONTACT:
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        startActivityForResult(pickContact, REQUEST_CONTACT);
-                    } else {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                            ExplanationDialog dialog = new ExplanationDialog().newInstance(
-                                    new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CONTACT);
-                            dialog.show(getFragmentManager(), "explanation");
-
-                        } else {
-                            //Opens permissions in settings
-                            Snackbar snackbar = Snackbar.make(getActivity()
-                                            .findViewById(R.id.fragment_grudge_relative_layout),
-                                    "No contact permission", Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Open settings", v1 -> openSettings());
-                            snackbar.show();
                         }
                     }
                     break;

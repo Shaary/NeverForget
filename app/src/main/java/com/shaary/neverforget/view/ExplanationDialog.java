@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import com.shaary.neverforget.R;
+
 public class ExplanationDialog extends DialogFragment {
 
     public static ExplanationDialog newInstance(String[] permissions, int requestCode) {
@@ -21,20 +23,20 @@ public class ExplanationDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         int requestCode = getArguments().getInt("requestCode");
-        String message = "It'll do you good";
-        String title = "We need power";
+        String message = getString(R.string.explanation_default_message);
+        String title = getString(R.string.explanation_default_title);
         switch (requestCode) {
             case 1:
-                title = "Allow access to read contacts?";
-                message = "This will save you from typing the name. But the app will work without it";
+                message = getString(R.string.explanation_contact_message);
+                title = getString(R.string.explanation_contact_title);
                 break;
             case 3:
-                title = "Allow access to take and save photo?";
-                message = "This will allow you to take and save the image of your grudge";
+                message = getString(R.string.explanation_photo_and_storage_message);
+                title = getString(R.string.explanation_photo_and_storage_title);
                 break;
             case 4:
-                title = "Allow access to send messages?";
-                message = "This will allow you to send grudges to your victims";
+                message = getString(R.string.explanation_sms_message);
+                title = getString(R.string.explanation_sms_title);
                 break;
         }
 
