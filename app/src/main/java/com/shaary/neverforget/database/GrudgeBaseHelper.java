@@ -29,7 +29,8 @@ public class GrudgeBaseHelper extends SQLiteOpenHelper {
                 GrudgeTable.Cols.REVENGED + ", " +
                 GrudgeTable.Cols.FORGIVE + ", " +
                 GrudgeTable.Cols.VICTIM + ", " +
-                GrudgeTable.Cols.DESCRIPTION +
+                GrudgeTable.Cols.DESCRIPTION + ", " +
+                GrudgeTable.Cols.GENDER +
                 ")"
         );
     }

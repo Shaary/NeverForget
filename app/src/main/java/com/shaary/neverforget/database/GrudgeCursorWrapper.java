@@ -29,6 +29,7 @@ public class GrudgeCursorWrapper extends CursorWrapper {
         int isForgive = getInt(getColumnIndex(GrudgeTable.Cols.FORGIVE));
         String victim = getString(getColumnIndex(GrudgeTable.Cols.VICTIM));
         String description = getString(getColumnIndex(GrudgeTable.Cols.DESCRIPTION));
+        String gender = getString(getColumnIndex(GrudgeTable.Cols.GENDER));
 
         Grudge grudge = new Grudge(UUID.fromString(uuidString));
         grudge.setTitle(title);
@@ -39,6 +40,7 @@ public class GrudgeCursorWrapper extends CursorWrapper {
         grudge.setForgiven(isForgive != 0);
         grudge.setVictim(victim);
         grudge.setDescription(description);
+        grudge.setGender(gender);
 
         return grudge;
     }

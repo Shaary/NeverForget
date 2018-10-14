@@ -18,6 +18,7 @@ public class Grudge {
     private boolean isForgiven = false;
     private String victim;
     private String description;
+    private String gender;
 
     public Grudge() {
         this.id = UUID.randomUUID();
@@ -112,5 +113,13 @@ public class Grudge {
 
     public String getPhotoFilename() {
         return "IMG_" + getId().toString() + ".jpg";
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

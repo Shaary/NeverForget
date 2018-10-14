@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">Never Forget</string>
+    <string name="app_name">Никогда не забывай</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="grudge_title_hint">Введите название обиды</string>
     <string name="grudge_title_label">Название</string>
     <string name="grudge_details_label">Описание</string>
@@ -15,14 +14,29 @@
     <string name="grudge_forgiven_text">Прощено, но незабыто</string>
     <string name="grudge_choose_victim_button_text">Выбирите обидчика</string>
     <string name="grudge_send_grudge_button_text">Кинуть обидку</string>
-    <string name="grudge_message_format">%1$s, Я на тебя в обиде. %2$s on %3$s. %4$s</string>
+    <string name="grudge_message_format">%1$s, Я на тебя в обиде. %2$s в %3$s. %4$s</string>
     <string name="grudge_delete">Удалить</string>
     <string name="send_report">Кинуть обидку с помощью</string>
-    <string name="grudge_report_subject">Never Forget Grudge Report</string>
-    <string name="grudge_forgiven_report">Но я прощаю тебя</string>
-    <string name="grudge_not_forgiven_report">Я не прощаю тебя</string>
+    <string name="grudge_report_subject">Никогда не забывай обиды отчет</string>
+    <string name="grudge_forgiven_report">Но я прощаю тебя :)</string>
+    <string name="grudge_not_forgiven_report">Я не прощаю тебя :(</string>
     <string name="grudge_to_the_first_button">К первой</string>
     <string name="grudge_to_the_last_button">К последней</string>
     <string name="grudge_descrip_hint_text">Опишите в форме "Ты сделал что-то не так"</string>
     <string name="grudge_forgive_checkbox">Простить</string>
+    <string name="explanation_default_message">Это пойдет тебе на пользу</string>
+    <string name="explanation_default_title">Нам нужна сила</string>
+    <string name="explanation_photo_and_storage_message">Это позволит тебе делать и сохранять фото чтобы ярче запомнить обиду</string>
+    <string name="explanation_photo_and_storage_title">Позволить делать и сохранять фото?</string>
+    <string name="explanation_sms_message">Это позволит тебе кидать обидку через смс и другие приложения</string>
+    <string name="explanation_sms_title">Позволить доступ к сообщениям?</string>
+    <string name="grudge_message_female_format">%1$s, Я на тебя в обиде. %2$s в %3$s. %4$s</string>
+    <string name="gender_female">женский</string>
+    <string name="gender_male">мужской</string>
+    <string name="victim_gender_title">пол обидчика</string>
+    <string name="victims_name_hint">Введите имя обидчика</string>
+    <string name="ok_button_text">ОК</string>
+    <string name="cancel_button_text">ОТМЕНА</string>
+    <string name="grudge_description">ты меня обидел</string>
+    <string name="grudge_description_female">ты меня обидела</string>
 </resources>

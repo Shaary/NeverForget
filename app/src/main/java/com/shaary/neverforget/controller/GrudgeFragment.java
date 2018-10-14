@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,6 +107,7 @@ public class GrudgeFragment extends Fragment {
 
     //TODO: make the class smaller
     //TODO: make the button position prettier
+    //TODO: add reminder
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,7 +156,7 @@ public class GrudgeFragment extends Fragment {
         //Picks victim from contact list
 
         victimButton.setOnClickListener(v -> {
-            VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment();
+            VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment().newInstance(grudge);
             dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
             dialogFragment.show(getFragmentManager(), "victim");
             });
@@ -203,7 +205,6 @@ public class GrudgeFragment extends Fragment {
         forgiveCheckBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {grudge.setForgiven(isChecked);
             setBoxVisibility(forgiveText, revengeCheckBox, grudge.isForgiven());}));
 
-        //TODO: make 2 options: choose from contact list or write the name down
         //Checks if there are apps to open the intent
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
@@ -251,9 +252,16 @@ public class GrudgeFragment extends Fragment {
             updateGrudge();
             updateDate();
         } else if (requestCode == REQUEST_CONTACT && data != null){
-            grudge.setVictim(data.getStringExtra("victim"));
+            String name = data.getStringExtra("victim");
+            grudge.setGender(data.getStringExtra("gender"));
+
+            grudge.setVictim(name);
             updateGrudge();
-            victimButton.setText(data.getStringExtra("victim"));
+            if (!name.isEmpty()) {
+                victimButton.setText(name);
+            } else {
+                victimButton.setText(R.string.grudge_choose_victim_button_text);
+            }
         } else if (requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getActivity(),
                     "com.shaary.android.grudgeintent.fileprovider",
@@ -305,13 +313,16 @@ public class GrudgeFragment extends Fragment {
 
         String description = grudge.getDescription();
         if (description == null) {
-            description = "you were mean to me ";
+            description = getString(R.string.grudge_description);
         }
         String date = grudge.getFormattedDate();
         String name = grudge.getVictim();
         if (name == null) {
             //TODO: come up with more polite name :D
             name = "***";
+        }
+        if (grudge.getGender().equals(getString(R.string.gender_female))) {
+            return getString(R.string.grudge_message_female_format, name, getString(R.string.grudge_description_female), date, forgiven);
         }
         return getString(R.string.grudge_message_format, name, description, date, forgiven);
     }

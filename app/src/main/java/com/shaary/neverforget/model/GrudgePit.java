@@ -117,6 +117,7 @@ public class GrudgePit {
         values.put(GrudgeTable.Cols.FORGIVE, grudge.isForgiven() ? 1 : 0);
         values.put(GrudgeTable.Cols.VICTIM, grudge.getVictim());
         values.put(GrudgeTable.Cols.DESCRIPTION, grudge.getDescription());
+        values.put(GrudgeTable.Cols.GENDER, grudge.getGender());
 
         return values;
     }

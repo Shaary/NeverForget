@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Never Forget</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="grudge_title_hint">Enter a title for the grudge</string>
     <string name="grudge_title_label">Title</string>
     <string name="grudge_details_label">Details</string>
@@ -16,21 +15,28 @@
     <string name="grudge_choose_victim_button_text">Choose victim</string>
     <string name="grudge_send_grudge_button_text">Send grudge</string>
     <string name="grudge_message_format">%1$s, I hold a grudge on you. %2$s on %3$s. %4$s</string>
+    <string name="grudge_message_female_format">%1$s, I hold a grudge on you. %2$s on %3$s. %4$s</string>
     <string name="grudge_delete">Delete</string>
     <string name="send_report">Send grudge report via</string>
     <string name="grudge_report_subject">Never Forget Grudge Report</string>
-    <string name="grudge_forgiven_report">But I forgive you</string>
-    <string name="grudge_not_forgiven_report">I don\'t forgive you</string>
+    <string name="grudge_forgiven_report">But I forgive you :)</string>
+    <string name="grudge_not_forgiven_report">I don\'t forgive you :(</string>
     <string name="grudge_to_the_first_button">To the first</string>
     <string name="grudge_to_the_last_button">To the last</string>
     <string name="grudge_descrip_hint_text">Describe in form you did smth wrong</string>
     <string name="grudge_forgive_checkbox">Forgive</string>
     <string name="explanation_default_message">It\'ll do you good</string>
     <string name="explanation_default_title">We need power</string>
-    <string name="explanation_contact_message">This will save you from typing the name. But the app will work without it</string>
-    <string name="explanation_contact_title">Allow access to read contacts?</string>
-    <string name="explanation_photo_and_storage_message">This will allow you to take and save the image of your grudge</string>
+    <string name="explanation_photo_and_storage_message">This will allow you to take and save a photo to remember your grudge more vivdly</string>
     <string name="explanation_photo_and_storage_title">Allow access to take and save photo?</string>
     <string name="explanation_sms_message">This will allow you to send grudges to your victims by SMS and other services</string>
     <string name="explanation_sms_title">Allow access to send messages?</string>
+    <string name="grudge_description">you were mean to me</string>
+    <string name="grudge_description_female">you were mean to me</string>
+    <string name="gender_female">female</string>
+    <string name="gender_male">male</string>
+    <string name="victim_gender_title">victim\'s gender</string>
+    <string name="victims_name_hint">Enter victims name</string>
+    <string name="ok_button_text">OK</string>
+    <string name="cancel_button_text">CANCEL</string>
 </resources>
