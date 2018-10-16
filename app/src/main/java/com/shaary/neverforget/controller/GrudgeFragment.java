@@ -2,6 +2,7 @@ package com.shaary.neverforget.controller;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
@@ -27,12 +29,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
@@ -43,6 +48,7 @@ import com.shaary.neverforget.view.VictimChooserDialogFragment;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -62,6 +68,7 @@ public class GrudgeFragment extends Fragment {
     private static final int REQUEST_PHOTO = 2;
     public static final int REQUEST_PHOTO_AND_STORAGE = 3;
     private static final int REQUEST_SMS = 4;
+    private static final int REQUEST_TIME = 5;
 
     private final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     private final Intent pickContact = new Intent(Intent.ACTION_PICK,
@@ -76,6 +83,7 @@ public class GrudgeFragment extends Fragment {
     @BindView(R.id.grudge_title) EditText titleField;
     @BindView(R.id.grudge_description_text) EditText descriptionField;
     @BindView(R.id.grudge_date_button) Button dateButton;
+    @BindView(R.id.grudge_time_button) Button timeButton;
     @BindView(R.id.grudge_send_button) Button sendButton;
     @BindView(R.id.grudge_victim_button) Button victimButton;
     @BindView(R.id.grudge_remind) CheckBox remindCheckBox;
@@ -112,6 +120,8 @@ public class GrudgeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.d(TAG, "onCreateView: language " + Locale.getDefault().getLanguage());
         View view = inflater.inflate(R.layout.fragment_grudge, container, false);
         ButterKnife.bind(this, view);
 
@@ -166,6 +176,7 @@ public class GrudgeFragment extends Fragment {
         }
 
         updateDate();
+        updateTime();
 
         //Shows DatePickerFragment on a day of the grudge
         dateButton.setOnClickListener(v -> {
@@ -179,6 +190,14 @@ public class GrudgeFragment extends Fragment {
         });
 
         //TODO: make a time checker
+        timeButton.setOnClickListener(v -> {
+            DialogFragment newFragment = TimePickerFragment
+                    .newInstance(grudge.getTime());
+            newFragment.setTargetFragment(GrudgeFragment.this, REQUEST_TIME);
+            newFragment.show(getFragmentManager(), "timePicker");
+
+        });
+        Log.d(TAG, "onCreateView: time " + grudge.getTime());
 
         //Sends intent to message sending apps
         sendButton.setOnClickListener(v -> {
@@ -224,6 +243,7 @@ public class GrudgeFragment extends Fragment {
     private void setBoxVisibility(TextView textView, CheckBox checkBox, boolean isVisible) {
         if (isVisible) {
             textView.setVisibility(View.VISIBLE);
+            checkBox.setChecked(false);
             checkBox.setEnabled(false);
         } else {
             textView.setVisibility(View.INVISIBLE);
@@ -251,6 +271,13 @@ public class GrudgeFragment extends Fragment {
             grudge.setDate(date);
             updateGrudge();
             updateDate();
+        } else if (requestCode == REQUEST_TIME) {
+            int hour = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_HOUR);
+            int minute = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_MINUTE);
+            grudge.setTime(hour, minute);
+            Log.d(TAG, "onActivityResult: setTime " + grudge.getTime());
+            updateTime();
+
         } else if (requestCode == REQUEST_CONTACT && data != null){
             String name = data.getStringExtra("victim");
             grudge.setGender(data.getStringExtra("gender"));
@@ -273,6 +300,14 @@ public class GrudgeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        //Prevents soft keyboard from popping up when open the fragment
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         GrudgePit.get(getActivity())
@@ -287,6 +322,10 @@ public class GrudgeFragment extends Fragment {
 
     private void updateDate() {
         dateButton.setText(grudge.getFormattedDate());
+    }
+
+    private void updateTime() {
+        timeButton.setText(grudge.getTime());
     }
 
     private void updateGrudge() {
@@ -316,15 +355,16 @@ public class GrudgeFragment extends Fragment {
             description = getString(R.string.grudge_description);
         }
         String date = grudge.getFormattedDate();
+        String time = grudge.getTime();
         String name = grudge.getVictim();
         if (name == null) {
             //TODO: come up with more polite name :D
             name = "***";
         }
         if (grudge.getGender().equals(getString(R.string.gender_female))) {
-            return getString(R.string.grudge_message_female_format, name, getString(R.string.grudge_description_female), date, forgiven);
+            return getString(R.string.grudge_message_female_format, name, getString(R.string.grudge_description_female), date, time, forgiven);
         }
-        return getString(R.string.grudge_message_format, name, description, date, forgiven);
+        return getString(R.string.grudge_message_format, name, description, date, time, forgiven);
     }
 
     @Override

@@ -38,7 +38,8 @@
         android:layout_alignBottom="@+id/victim_ok_button"
         android:layout_centerHorizontal="true"
         android:checked="true"
-        android:text="@string/gender_female" />
+        android:text="@string/gender_female"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/gender_title"

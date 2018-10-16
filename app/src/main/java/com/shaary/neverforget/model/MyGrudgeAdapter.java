@@ -1,6 +1,8 @@
 package com.shaary.neverforget.model;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,24 +45,23 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
         return 0;
     }
 
-    //TODO: change separate views for background change
+    //TODO: add different icons
     @NonNull
     @Override
     public MyGrudgeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View view;
+        View view = inflater.inflate(R.layout.list_item_grudge, parent, false);
         switch (viewType) {
             case 0:
-                view = inflater.inflate(R.layout.list_item_grudge, parent, false);
+                view.setBackgroundResource(R.drawable.grudge_gradient);
                 break;
             case 1:
-                view = inflater.inflate(R.layout.list_item_serious_grudge, parent, false);
+                view.setBackgroundResource(R.drawable.serous_grudge_gradient);
                 break;
             case 2:
-                view = inflater.inflate(R.layout.list_item_forgiven_grudge, parent, false);
+                view.setBackgroundResource(R.drawable.forgiven_grudge_gradient);
                 break;
-            default: view = inflater.inflate(R.layout.list_item_grudge, parent, false);
         }
 
         return new MyGrudgeViewHolder(view);
@@ -79,6 +80,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
     public class MyGrudgeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView grudgeTitle;
         private TextView grudgeDate;
+        private TextView grudgeForgiven;
         private ImageView revengeImage;
         private Grudge grudge;
 
@@ -87,8 +89,8 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
             itemView.setOnClickListener(this);
             grudgeTitle = itemView.findViewById(R.id.grudge_title_text);
             grudgeDate = itemView.findViewById(R.id.grudge_date_text);
+            grudgeForgiven = itemView.findViewById(R.id.grudge_forgiven_text_view);
             revengeImage = itemView.findViewById(R.id.revenged_image_view);
-
         }
 
         public void bind(Grudge grudge) {
@@ -96,6 +98,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
             grudgeTitle.setText(grudge.getTitle());
             grudgeDate.setText(grudge.getFormattedDate());
             revengeImage.setVisibility(grudge.isRevenge() ? View.VISIBLE : View.GONE);
+            grudgeForgiven.setVisibility(grudge.isForgiven() ? View.VISIBLE : View.GONE);
         }
 
         @Override

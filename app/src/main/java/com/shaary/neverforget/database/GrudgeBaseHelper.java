@@ -24,6 +24,7 @@ public class GrudgeBaseHelper extends SQLiteOpenHelper {
                 GrudgeTable.Cols.UUID + ", " +
                 GrudgeTable.Cols.TITLE + ", " +
                 GrudgeTable.Cols.DATE + ", " +
+                GrudgeTable.Cols.TIME + ", " +
                 GrudgeTable.Cols.REMIND + ", " +
                 GrudgeTable.Cols.REVENGE + ", " +
                 GrudgeTable.Cols.REVENGED + ", " +

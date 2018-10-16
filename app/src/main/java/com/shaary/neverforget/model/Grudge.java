@@ -1,7 +1,12 @@
 package com.shaary.neverforget.model;
 
-import java.text.DateFormat;
+
+import android.support.annotation.NonNull;
+
+import java.sql.Time;
+import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
@@ -18,16 +23,25 @@ public class Grudge {
     private boolean isForgiven = false;
     private String victim;
     private String description;
-    private String gender;
+    private String gender = "female";
+    private String time;
 
     public Grudge() {
         this.id = UUID.randomUUID();
         date = new Date();
+        time = getTimeNow();
     }
 
     public Grudge(UUID id) {
         this.id = id;
         date = new Date();
+        time = getTimeNow();
+    }
+
+    private String getTimeNow() {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getFormat(), Locale.getDefault());
+        return simpleDateFormat.format(date);
     }
 
     public UUID getId() {
@@ -61,6 +75,41 @@ public class Grudge {
 
     public void setYears(int years) {
         this.years = years;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(int hour, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonth(), date.getDay(), hour, minute);
+        long t = calendar.getTimeInMillis();
+
+        String pattern = getFormat();
+        Time tme = new Time(t);
+        Format formatter = new SimpleDateFormat(pattern);
+
+        this.time = formatter.format(tme);
+    }
+
+    @NonNull
+    private String getFormat() {
+        Locale locale = Locale.getDefault();
+
+        String pattern = "";
+        // check language
+        if ("ru".equals(locale.getLanguage())) {
+            // russian
+            pattern = "HH:mm";
+        } else {
+            pattern = "h:mm a";
+        }
+        return pattern;
+    }
+
+    public void setFormattedTime(String time) {
+        this.time = time;
     }
 
     public boolean isRemind() {
@@ -122,4 +171,5 @@ public class Grudge {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
 }

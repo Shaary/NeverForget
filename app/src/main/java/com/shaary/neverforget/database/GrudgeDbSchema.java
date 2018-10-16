@@ -15,6 +15,7 @@ public class GrudgeDbSchema {
             public static final String VICTIM = "victim";
             public static final String DESCRIPTION = "description";
             public static final String GENDER = "gender";
+            public static final String TIME = "time";
         }
     }
 }

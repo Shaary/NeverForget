@@ -111,6 +111,7 @@ public class GrudgePit {
         values.put(GrudgeTable.Cols.UUID, grudge.getId().toString());
         values.put(GrudgeTable.Cols.TITLE, grudge.getTitle());
         values.put(GrudgeTable.Cols.DATE, grudge.getDate().getTime());
+        values.put(GrudgeTable.Cols.TIME, grudge.getTime());
         values.put(GrudgeTable.Cols.REMIND, grudge.isRemind() ? 1 : 0);
         values.put(GrudgeTable.Cols.REVENGE, grudge.isRevenge() ? 1 : 0);
         values.put(GrudgeTable.Cols.REVENGED, grudge.isRevenged() ? 1 : 0);

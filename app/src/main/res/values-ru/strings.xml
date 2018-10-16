@@ -10,11 +10,11 @@
     <string name="new_grudge">Новая обида</string>
     <string name="show_subtitle">Показать количество</string>
     <string name="hide_subtitle">Спрятать количество</string>
-    <string name="subtitle_format">%1$d обид</string>
+    <string name="subtitle_format">Кол-во обид: %1$d</string>
     <string name="grudge_forgiven_text">Прощено, но незабыто</string>
     <string name="grudge_choose_victim_button_text">Выбирите обидчика</string>
     <string name="grudge_send_grudge_button_text">Кинуть обидку</string>
-    <string name="grudge_message_format">%1$s, Я на тебя в обиде. %2$s в %3$s. %4$s</string>
+    <string name="grudge_message_format">%1$s, Я на тебя в обиде. %2$s в %3$s в %4$s. %5$s</string>
     <string name="grudge_delete">Удалить</string>
     <string name="send_report">Кинуть обидку с помощью</string>
     <string name="grudge_report_subject">Никогда не забывай обиды отчет</string>
@@ -30,7 +30,7 @@
     <string name="explanation_photo_and_storage_title">Позволить делать и сохранять фото?</string>
     <string name="explanation_sms_message">Это позволит тебе кидать обидку через смс и другие приложения</string>
     <string name="explanation_sms_title">Позволить доступ к сообщениям?</string>
-    <string name="grudge_message_female_format">%1$s, Я на тебя в обиде. %2$s в %3$s. %4$s</string>
+    <string name="grudge_message_female_format">%1$s, Я на тебя в обиде. %2$s в %3$s в %4$s. %5$s</string>
     <string name="gender_female">женский</string>
     <string name="gender_male">мужской</string>
     <string name="victim_gender_title">пол обидчика</string>
@@ -39,4 +39,5 @@
     <string name="cancel_button_text">ОТМЕНА</string>
     <string name="grudge_description">ты меня обидел</string>
     <string name="grudge_description_female">ты меня обидела</string>
+
 </resources>

@@ -51,20 +51,35 @@
             android:ems="100"
             android:hint="@string/grudge_descrip_hint_text"
             android:inputType="textCapSentences|textMultiLine"
-            android:layout_below="@id/grudge_description_label"/>
+            android:layout_below="@id/grudge_description_label" />
 
-        <Button
-            android:id="@+id/grudge_date_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/grudge_description_text"/>
+            android:orientation="horizontal"
+            android:id="@+id/grudge_button_layout"
+            android:layout_below="@+id/grudge_description_text">
+
+            <Button
+                android:id="@+id/grudge_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/grudge_time_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
 
         <CheckBox
             android:id="@+id/grudge_remind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/grudge_remind_label"
-            android:layout_below="@id/grudge_date_button"/>
+            android:layout_below="@id/grudge_button_layout"/>
 
         <CheckBox
             android:id="@+id/grudge_revenge"
@@ -84,7 +99,7 @@
             android:id="@+id/grudge_forgiven_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/grudge_forgiven_text"
+            android:text="Are you sure?"
             android:visibility="invisible"
             android:textStyle="bold|italic"
             android:layout_below="@id/grudge_forgive"/>

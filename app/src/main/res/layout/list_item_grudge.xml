@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/grudge_gradient">
+    android:background="@drawable/grudge_gradient"
+    android:id="@+id/grudge_item_layout">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="235dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -21,15 +23,23 @@
             android:id="@+id/grudge_title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Grudge Title"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Grudge Title" />
 
         <TextView
             android:id="@+id/grudge_date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Grudge Date"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Grudge Date" />
+
+        <TextView
+            android:id="@+id/grudge_forgiven_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/grudge_forgiven_text"
+            android:textColor="@color/colorAccent"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <ImageView

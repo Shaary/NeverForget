@@ -23,6 +23,7 @@ public class GrudgeCursorWrapper extends CursorWrapper {
         String uuidString = getString(getColumnIndex(GrudgeTable.Cols.UUID));
         String title = getString(getColumnIndex(GrudgeTable.Cols.TITLE));
         long date = getLong(getColumnIndex(GrudgeTable.Cols.DATE));
+        String time = getString(getColumnIndex(GrudgeTable.Cols.TIME));
         int isRemind = getInt(getColumnIndex(GrudgeTable.Cols.REMIND));
         int isRevenge = getInt(getColumnIndex(GrudgeTable.Cols.REVENGE));
         int isRevenged = getInt(getColumnIndex(GrudgeTable.Cols.REVENGED));
@@ -34,6 +35,7 @@ public class GrudgeCursorWrapper extends CursorWrapper {
         Grudge grudge = new Grudge(UUID.fromString(uuidString));
         grudge.setTitle(title);
         grudge.setDate(new Date(date));
+        grudge.setFormattedTime(time);
         grudge.setRemind(isRemind != 0);
         grudge.setRevenge(isRevenge != 0);
         grudge.setRevenged(isRevenged != 0);

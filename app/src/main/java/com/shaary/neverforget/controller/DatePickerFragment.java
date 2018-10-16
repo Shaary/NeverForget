@@ -67,6 +67,7 @@ public class DatePickerFragment extends DialogFragment {
                     Date date1 = new GregorianCalendar(year1, month1, day1).getTime();
                     sendResult(Activity.RESULT_OK, date1);
                 })
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dismiss())
                 .create();
     }
 
