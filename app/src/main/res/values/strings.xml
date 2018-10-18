@@ -41,4 +41,8 @@
     <string name="cancel_button_text">CANCEL</string>
     <string name="time_of_grudge">Time of grudge:</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="grudge_information">Information</string>
+
 </resources>

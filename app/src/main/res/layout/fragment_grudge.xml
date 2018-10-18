@@ -120,10 +120,12 @@
 
         <ImageView
             android:id="@+id/grudge_image_view"
-            android:layout_width="89dp"
-            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:layout_height="89dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:layout_margin="5dp"
             android:src="@android:drawable/progress_indeterminate_horizontal" />
 
         <ImageButton

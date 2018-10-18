@@ -42,6 +42,7 @@ public class GrudgePagerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grudge_pager);
         ButterKnife.bind(this);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         UUID grudgeId = (UUID) getIntent()
                     .getSerializableExtra(EXTRA_GRUDGE_ID);

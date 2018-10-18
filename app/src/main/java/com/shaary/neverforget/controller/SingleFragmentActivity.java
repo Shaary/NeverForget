@@ -23,6 +23,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity{
         setContentView(getLayoutResId());
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.container_layout);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (fragment == null) {
             fragment = createFragment();
             fm.beginTransaction()

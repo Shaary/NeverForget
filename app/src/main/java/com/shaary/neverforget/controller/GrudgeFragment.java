@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -39,11 +40,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 import com.shaary.neverforget.view.ExplanationDialog;
+import com.shaary.neverforget.view.GrudgeImageFragment;
 import com.shaary.neverforget.view.VictimChooserDialogFragment;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.Date;
@@ -79,6 +83,7 @@ public class GrudgeFragment extends Fragment {
     private Grudge grudge;
     private File photoFile;
     private Callbacks callbacks;
+    private Bitmap imageBitmap;
 
     @BindView(R.id.grudge_title) EditText titleField;
     @BindView(R.id.grudge_description_text) EditText descriptionField;
@@ -166,12 +171,10 @@ public class GrudgeFragment extends Fragment {
         //Picks victim from contact list
 
         victimButton.setOnClickListener(v -> {
-            VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment().newInstance(grudge);
-            dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
-            dialogFragment.show(getFragmentManager(), "victim");
+            openVictimChooserDialog();
             });
 
-        if (grudge.getVictim() != null) {
+        if (grudge.getVictim().length() > 0) {
             victimButton.setText(grudge.getVictim());
         }
 
@@ -189,7 +192,6 @@ public class GrudgeFragment extends Fragment {
             dialog.show(fragmentManager, DIALOG_DATE);
         });
 
-        //TODO: make a time checker
         timeButton.setOnClickListener(v -> {
             DialogFragment newFragment = TimePickerFragment
                     .newInstance(grudge.getTime());
@@ -202,6 +204,15 @@ public class GrudgeFragment extends Fragment {
         //Sends intent to message sending apps
         sendButton.setOnClickListener(v -> {
             requestPermissions(new String[] {Manifest.permission.SEND_SMS}, REQUEST_SMS);
+            //If victim's name == null asks if it was left blank intentionally
+            if (grudge.getVictim().length() < 1) {
+                TSnackbar snackbar = TSnackbar.make(getActivity()
+                                .findViewById(R.id.fragment_grudge_relative_layout),
+                        "You didn't enter the victims name", Snackbar.LENGTH_LONG);
+
+                snackbar.setAction("Enter the name", v1 -> openVictimChooserDialog());
+                snackbar.show();
+            }
         });
 
         remindCheckBox.setChecked(grudge.isRemind());
@@ -226,9 +237,7 @@ public class GrudgeFragment extends Fragment {
 
         //Checks if there are apps to open the intent
         PackageManager packageManager = getActivity().getPackageManager();
-        if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
-            victimButton.setEnabled(false);
-        }
+
         //Checks for camera
         boolean canTakePhoto = photoFile != null &&
                 captureImage.resolveActivity(packageManager) != null;
@@ -236,8 +245,19 @@ public class GrudgeFragment extends Fragment {
         photoButton.setOnClickListener(v -> requestPermissions(new String[] {Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PHOTO_AND_STORAGE));
 
+        grudgeImage.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getFragmentManager();
+            GrudgeImageFragment fragment = GrudgeImageFragment.newInstance(photoFile);
+            fragment.show(fragmentManager, "zoomedGrudge");
+        });
         updateGrudgeImage();
         return view;
+    }
+
+    private void openVictimChooserDialog() {
+        VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment().newInstance(grudge);
+        dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
+        dialogFragment.show(getFragmentManager(), "victim");
     }
 
     private void setBoxVisibility(TextView textView, CheckBox checkBox, boolean isVisible) {
@@ -258,6 +278,7 @@ public class GrudgeFragment extends Fragment {
         grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
         photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -284,9 +305,11 @@ public class GrudgeFragment extends Fragment {
 
             grudge.setVictim(name);
             updateGrudge();
-            if (!name.isEmpty()) {
+            if (name.length() > 0) {
+                Log.d(TAG, "onActivityResult if: set name " + name);
                 victimButton.setText(name);
             } else {
+                Log.d(TAG, "onActivityResult else: set name " + name);
                 victimButton.setText(R.string.grudge_choose_victim_button_text);
             }
         } else if (requestCode == REQUEST_PHOTO) {
@@ -337,7 +360,12 @@ public class GrudgeFragment extends Fragment {
         if (photoFile == null || !photoFile.exists()) {
             grudgeImage.setImageDrawable(null);
         } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), getActivity());
+//            Picasso.get()
+//                    .load(new File(photoFile.getPath()))
+//                    .fit()
+//                    .into(grudgeImage);
+            //Log.d(TAG, "updateGrudgeImage: path " + photoFile.getPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath());
             grudgeImage.setImageBitmap(bitmap);
         }
     }
