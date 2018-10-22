@@ -1,8 +1,6 @@
-package com.shaary.neverforget.model;
+package com.shaary.neverforget.view;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shaary.neverforget.R;
+import com.shaary.neverforget.model.Grudge;
 
 import java.util.List;
 
@@ -39,13 +38,15 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
         if (grudges.get(position).isForgiven()) {
             return 2;
         }
+        if (grudges.get(position).isRevenged()) {
+            return 0;
+        }
         if (grudges.get(position).isRevenge()) {
             return 1;
         }
         return 0;
     }
 
-    //TODO: add different icons
     @NonNull
     @Override
     public MyGrudgeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -97,7 +98,15 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
             this.grudge = grudge;
             grudgeTitle.setText(grudge.getTitle());
             grudgeDate.setText(grudge.getFormattedDate());
-            revengeImage.setVisibility(grudge.isRevenge() ? View.VISIBLE : View.GONE);
+            if (grudge.isRevenge()) {
+                revengeImage.setImageResource(R.drawable.dagger);
+            }
+            if(grudge.isRevenged()) {
+                revengeImage.setImageResource(R.drawable.revenged);
+            }
+            if (grudge.isForgiven()) {
+                revengeImage.setImageResource(R.drawable.sun);
+            }
             grudgeForgiven.setVisibility(grudge.isForgiven() ? View.VISIBLE : View.GONE);
         }
 

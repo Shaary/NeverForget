@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.InfoFragment"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:padding="16dp"    >
+
+    <TextView
+        android:id="@+id/info_text_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_1"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_2"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_3"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_4"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_5"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_6"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/info_text_7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_7"
+        android:paddingBottom="8dp"/>
+
+    <Button
+        android:id="@+id/info_ok_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ok_button_text" />
+
+
+</LinearLayout>

@@ -10,9 +10,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/devil_icon_square_hdpi"
+        android:icon="@mipmap/devil_icon_square"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/devil_icon_hdpi"
+        android:roundIcon="@mipmap/devil_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".controller.GrudgeListActivity">

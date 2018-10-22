@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/knife_2" />
+        tools:srcCompat="@drawable/ic_close" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

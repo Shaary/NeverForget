@@ -23,7 +23,7 @@ public class Grudge {
     private boolean isForgiven = false;
     private String victim;
     private String description;
-    private String gender = "female";
+    private String gender;
     private String time;
 
     public Grudge() {

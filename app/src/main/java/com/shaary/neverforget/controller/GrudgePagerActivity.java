@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
@@ -42,7 +43,6 @@ public class GrudgePagerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grudge_pager);
         ButterKnife.bind(this);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         UUID grudgeId = (UUID) getIntent()
                     .getSerializableExtra(EXTRA_GRUDGE_ID);
@@ -84,7 +84,6 @@ public class GrudgePagerActivity extends AppCompatActivity
                     toFirstButton.setEnabled(true);
                     toLastButton.setEnabled(true);
                 }
-
             }
 
             @Override

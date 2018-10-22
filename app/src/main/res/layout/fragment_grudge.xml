@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/grudge_scroll_view">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,36 +74,50 @@
                 android:layout_weight="1"/>
         </LinearLayout>
 
-
-        <CheckBox
-            android:id="@+id/grudge_remind"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/grudge_remind_label"
-            android:layout_below="@id/grudge_button_layout"/>
+            android:orientation="vertical"
+            android:layout_below="@id/grudge_button_layout"
+            android:id="@+id/checkbox_layout">
+            <CheckBox
+                android:id="@+id/grudge_remind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/grudge_remind_label"
+                android:layout_below="@id/grudge_button_layout"
+                android:visibility="invisible"/>
 
-        <CheckBox
-            android:id="@+id/grudge_revenge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/grudge_revenge_label"
-            android:layout_below="@id/grudge_remind"/>
+            <CheckBox
+                android:id="@+id/grudge_revenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/grudge_remind"
+                android:text="@string/grudge_revenge_label"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/grudge_forgive"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/grudge_forgive_checkbox"
-            android:layout_below="@id/grudge_revenge"/>
+            <CheckBox
+                android:id="@+id/grudge_forgive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/grudge_revenge"
+                android:text="@string/grudge_forgive_checkbox"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/grudge_forgiven_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Are you sure?"
-            android:visibility="invisible"
+            android:layout_below="@id/checkbox_layout"
+            android:text="@string/forgiven_question"
+            android:textColor="@android:color/background_light"
             android:textStyle="bold|italic"
-            android:layout_below="@id/grudge_forgive"/>
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/grudge_victim_button"
@@ -134,5 +149,24 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/grudge_image_view"
             android:src="@android:drawable/ic_menu_camera" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/grudge_button_layout"
+            android:layout_toEndOf="@+id/checkbox_layout"
+            android:visibility="invisible"/>
+
+        <CheckBox
+            android:id="@+id/grudge_revenged"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkBox"
+            android:layout_toEndOf="@+id/checkbox_layout"
+            android:enabled="false"
+            android:text="@string/revenged_text"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold" />
     </RelativeLayout>
 </ScrollView>

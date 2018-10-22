@@ -1,4 +1,4 @@
-package com.shaary.neverforget.model;
+package com.shaary.neverforget.controller;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,10 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.shaary.neverforget.R;
+import com.shaary.neverforget.model.Grudge;
+import com.shaary.neverforget.model.GrudgePit;
+import com.shaary.neverforget.view.MyGrudgeAdapter;
 
 import java.util.List;
 
@@ -120,7 +121,6 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
         } else {
             subtitleItem.setTitle(R.string.show_subtitle);
         }
-
     }
 
     @Override
@@ -153,7 +153,8 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
             subtitle = null;
         }
 
+        Log.d(TAG, "updateSubtitle: subtitle " + subtitle);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setSubtitle(subtitle);
+        activity.getSupportActionBar().setTitle(subtitle);
     }
 }

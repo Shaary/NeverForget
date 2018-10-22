@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -34,20 +36,29 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
+import com.shaary.neverforget.view.DeleteImageAlertDialog;
 import com.shaary.neverforget.view.ExplanationDialog;
 import com.shaary.neverforget.view.GrudgeImageFragment;
+import com.shaary.neverforget.view.InfoFragment;
 import com.shaary.neverforget.view.VictimChooserDialogFragment;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.Date;
@@ -73,17 +84,15 @@ public class GrudgeFragment extends Fragment {
     public static final int REQUEST_PHOTO_AND_STORAGE = 3;
     private static final int REQUEST_SMS = 4;
     private static final int REQUEST_TIME = 5;
+    private static final int REQUEST_DELETE_IMAGE = 6;
 
     private final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    private final Intent pickContact = new Intent(Intent.ACTION_PICK,
-            ContactsContract.Contacts.CONTENT_URI);
 
     private static final String TAG = GrudgeFragment.class.getSimpleName();
 
     private Grudge grudge;
     private File photoFile;
     private Callbacks callbacks;
-    private Bitmap imageBitmap;
 
     @BindView(R.id.grudge_title) EditText titleField;
     @BindView(R.id.grudge_description_text) EditText descriptionField;
@@ -93,10 +102,12 @@ public class GrudgeFragment extends Fragment {
     @BindView(R.id.grudge_victim_button) Button victimButton;
     @BindView(R.id.grudge_remind) CheckBox remindCheckBox;
     @BindView(R.id.grudge_revenge) CheckBox revengeCheckBox;
+    @BindView(R.id.grudge_revenged) CheckBox revengedCheckBox;
     @BindView(R.id.grudge_forgive) CheckBox forgiveCheckBox;
     @BindView(R.id.grudge_forgiven_text) TextView forgiveText;
     @BindView(R.id.grudge_image_view) ImageView grudgeImage;
     @BindView(R.id.grudge_photo_button) ImageButton photoButton;
+    @BindView(R.id.grudge_scroll_view) ScrollView layout;
 
 
     public static GrudgeFragment newInstance(UUID grudgeId) {
@@ -119,7 +130,6 @@ public class GrudgeFragment extends Fragment {
     }
 
     //TODO: make the class smaller
-    //TODO: make the button position prettier
     //TODO: add reminder
 
     @Override
@@ -168,14 +178,16 @@ public class GrudgeFragment extends Fragment {
             }
         });
 
-        //Picks victim from contact list
+        victimButton.setOnClickListener(v -> openVictimChooserDialog());
 
-        victimButton.setOnClickListener(v -> {
-            openVictimChooserDialog();
-            });
+        if (grudge.getVictim() != null) {
+            if (!grudge.getVictim().isEmpty()) {
+                victimButton.setText(grudge.getVictim());
+            }
+        }
 
-        if (grudge.getVictim().length() > 0) {
-            victimButton.setText(grudge.getVictim());
+        if (grudge.getGender() == null) {
+            grudge.setGender(getString(R.string.gender_female));
         }
 
         updateDate();
@@ -205,10 +217,10 @@ public class GrudgeFragment extends Fragment {
         sendButton.setOnClickListener(v -> {
             requestPermissions(new String[] {Manifest.permission.SEND_SMS}, REQUEST_SMS);
             //If victim's name == null asks if it was left blank intentionally
-            if (grudge.getVictim().length() < 1) {
+            if (grudge.getVictim() == null || grudge.getVictim().isEmpty()) {
                 TSnackbar snackbar = TSnackbar.make(getActivity()
                                 .findViewById(R.id.fragment_grudge_relative_layout),
-                        "You didn't enter the victims name", Snackbar.LENGTH_LONG);
+                        R.string.no_name_string, Snackbar.LENGTH_LONG);
 
                 snackbar.setAction("Enter the name", v1 -> openVictimChooserDialog());
                 snackbar.show();
@@ -225,15 +237,42 @@ public class GrudgeFragment extends Fragment {
         revengeCheckBox.setChecked(grudge.isRevenge());
         revengeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             grudge.setRevenge(isChecked);
+            revengedCheckBox.setEnabled(isChecked);
+            setLayout();
+            updateGrudge();
+        });
+
+        //Can check Revenged only if you had checked Revenge first
+        revengedCheckBox.setEnabled(grudge.isRevenge());
+        revengedCheckBox.setChecked(grudge.isRevenged());
+        if(grudge.isRevenged()) {
+            Log.d(TAG, "onCreateView: revenged " + grudge.isRevenged());
+            //Can't uncheck Revenge if already revenged
+            revengeCheckBox.setEnabled(false);
+        }
+        revengedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            grudge.setRevenged(isChecked);
+            revengeCheckBox.setEnabled(!isChecked);
+            setLayout();
             updateGrudge();
         });
 
         forgiveCheckBox.setChecked(grudge.isForgiven());
+        if (grudge.isForgiven()) {
+            forgiveText.setVisibility(View.VISIBLE);
+            revengeCheckBox.setEnabled(false);
+            revengedCheckBox.setEnabled(false);
+        }
 
-        setBoxVisibility(forgiveText, revengeCheckBox, grudge.isForgiven());
-
-        forgiveCheckBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {grudge.setForgiven(isChecked);
-            setBoxVisibility(forgiveText, revengeCheckBox, grudge.isForgiven());}));
+        forgiveCheckBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            grudge.setForgiven(isChecked);
+            forgiveText.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
+            if (!grudge.isRevenged()) {
+                revengeCheckBox.setEnabled(!isChecked);
+            }
+            revengedCheckBox.setEnabled(!isChecked);
+            setLayout();
+            updateGrudge();}));
 
         //Checks if there are apps to open the intent
         PackageManager packageManager = getActivity().getPackageManager();
@@ -245,30 +284,39 @@ public class GrudgeFragment extends Fragment {
         photoButton.setOnClickListener(v -> requestPermissions(new String[] {Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PHOTO_AND_STORAGE));
 
+        grudgeImage.setLongClickable(true);
         grudgeImage.setOnClickListener(v -> {
             FragmentManager fragmentManager = getFragmentManager();
             GrudgeImageFragment fragment = GrudgeImageFragment.newInstance(photoFile);
             fragment.show(fragmentManager, "zoomedGrudge");
         });
+        grudgeImage.setOnLongClickListener(v -> {
+            DeleteImageAlertDialog dialog = new DeleteImageAlertDialog();
+            dialog.setTargetFragment(GrudgeFragment.this, REQUEST_DELETE_IMAGE);
+            dialog.show(getFragmentManager(), "deleteImage");
+            return false;
+        });
         updateGrudgeImage();
+        setLayout();
         return view;
     }
 
-    private void openVictimChooserDialog() {
-        VictimChooserDialogFragment dialogFragment = new VictimChooserDialogFragment().newInstance(grudge);
-        dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
-        dialogFragment.show(getFragmentManager(), "victim");
+    private void setLayout() {
+        int imagePath = GrudgeFragmentHelper.getLayoutId(grudge);
+
+        Glide.with(this).load(imagePath).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                layout.setBackground(resource);
+            }
+        });
+
     }
 
-    private void setBoxVisibility(TextView textView, CheckBox checkBox, boolean isVisible) {
-        if (isVisible) {
-            textView.setVisibility(View.VISIBLE);
-            checkBox.setChecked(false);
-            checkBox.setEnabled(false);
-        } else {
-            textView.setVisibility(View.INVISIBLE);
-            checkBox.setEnabled(true);
-        }
+    private void openVictimChooserDialog() {
+        VictimChooserDialogFragment dialogFragment = VictimChooserDialogFragment.newInstance(grudge);
+        dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
+        dialogFragment.show(getFragmentManager(), "victim");
     }
 
     @Override
@@ -278,7 +326,6 @@ public class GrudgeFragment extends Fragment {
         grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
         photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -305,7 +352,7 @@ public class GrudgeFragment extends Fragment {
 
             grudge.setVictim(name);
             updateGrudge();
-            if (name.length() > 0) {
+            if (name != null && name.length() > 0) {
                 Log.d(TAG, "onActivityResult if: set name " + name);
                 victimButton.setText(name);
             } else {
@@ -319,6 +366,12 @@ public class GrudgeFragment extends Fragment {
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             updateGrudge();
             updateGrudgeImage();
+        } else if (requestCode == REQUEST_DELETE_IMAGE) {
+            String delete = data.getStringExtra("delete");
+            if (delete.equals("delete")) {
+                photoFile.delete();
+                updateGrudgeImage();
+            }
         }
     }
 
@@ -360,18 +413,13 @@ public class GrudgeFragment extends Fragment {
         if (photoFile == null || !photoFile.exists()) {
             grudgeImage.setImageDrawable(null);
         } else {
-//            Picasso.get()
-//                    .load(new File(photoFile.getPath()))
-//                    .fit()
-//                    .into(grudgeImage);
-            //Log.d(TAG, "updateGrudgeImage: path " + photoFile.getPath());
             Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath());
             grudgeImage.setImageBitmap(bitmap);
         }
     }
 
     private String getGrudgeReport() {
-        String forgiven = "";
+        String forgiven;
         if(grudge.isForgiven()) {
             forgiven = getString(R.string.grudge_forgiven_report);
         } else {
@@ -386,8 +434,7 @@ public class GrudgeFragment extends Fragment {
         String time = grudge.getTime();
         String name = grudge.getVictim();
         if (name == null) {
-            //TODO: come up with more polite name :D
-            name = "***";
+            name = getString(R.string.default_name);
         }
         if (grudge.getGender().equals(getString(R.string.gender_female))) {
             return getString(R.string.grudge_message_female_format, name, getString(R.string.grudge_description_female), date, time, forgiven);
@@ -409,6 +456,10 @@ public class GrudgeFragment extends Fragment {
                 GrudgePit.get(getActivity()).deleteGrudge(grudge);
                 getActivity().finish();
                 return true;
+
+            case R.id.grudge_info:
+                InfoFragment infoFragment = new InfoFragment();
+                infoFragment.show(getFragmentManager(), "info");
         }
         return super.onOptionsItemSelected(item);
     }
