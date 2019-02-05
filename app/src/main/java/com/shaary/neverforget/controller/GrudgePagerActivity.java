@@ -69,6 +69,10 @@ public class GrudgePagerActivity extends AppCompatActivity
                 viewPager.setCurrentItem(i);
                 break;
             }
+            if (grudges.get(i).getId() == null) {
+                viewPager.setCurrentItem(i+1);
+                break;
+            }
         }
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

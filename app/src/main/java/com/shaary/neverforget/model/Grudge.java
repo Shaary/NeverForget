@@ -1,6 +1,7 @@
 package com.shaary.neverforget.model;
 
 
+import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
 import java.sql.Time;

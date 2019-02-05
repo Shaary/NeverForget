@@ -2,18 +2,15 @@ package com.shaary.neverforget.controller;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -33,17 +30,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.bumptech.glide.Glide;
@@ -57,8 +50,6 @@ import com.shaary.neverforget.view.ExplanationDialog;
 import com.shaary.neverforget.view.GrudgeImageFragment;
 import com.shaary.neverforget.view.InfoFragment;
 import com.shaary.neverforget.view.VictimChooserDialogFragment;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.Date;
@@ -82,7 +73,6 @@ public class GrudgeFragment extends Fragment {
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO = 2;
     public static final int REQUEST_PHOTO_AND_STORAGE = 3;
-    private static final int REQUEST_SMS = 4;
     private static final int REQUEST_TIME = 5;
     private static final int REQUEST_DELETE_IMAGE = 6;
 
@@ -215,14 +205,21 @@ public class GrudgeFragment extends Fragment {
 
         //Sends intent to message sending apps
         sendButton.setOnClickListener(v -> {
-            requestPermissions(new String[] {Manifest.permission.SEND_SMS}, REQUEST_SMS);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, getGrudgeReport());
+            Log.d(TAG, "onCreateView: grudge report " + getGrudgeReport());
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.grudge_report_subject));
+            intent = Intent.createChooser(intent, getString(R.string.send_report));
+            startActivity(intent);
+
             //If victim's name == null asks if it was left blank intentionally
             if (grudge.getVictim() == null || grudge.getVictim().isEmpty()) {
                 TSnackbar snackbar = TSnackbar.make(getActivity()
                                 .findViewById(R.id.fragment_grudge_relative_layout),
                         R.string.no_name_string, Snackbar.LENGTH_LONG);
 
-                snackbar.setAction("Enter the name", v1 -> openVictimChooserDialog());
+                snackbar.setAction(R.string.enter_the_name, v1 -> openVictimChooserDialog());
                 snackbar.show();
             }
         });
@@ -436,9 +433,7 @@ public class GrudgeFragment extends Fragment {
         if (name == null) {
             name = getString(R.string.default_name);
         }
-        if (grudge.getGender().equals(getString(R.string.gender_female))) {
-            return getString(R.string.grudge_message_female_format, name, getString(R.string.grudge_description_female), date, time, forgiven);
-        }
+
         return getString(R.string.grudge_message_format, name, description, date, time, forgiven);
     }
 
@@ -505,30 +500,6 @@ public class GrudgeFragment extends Fragment {
                             ExplanationDialog dialog = ExplanationDialog.newInstance(new String[]{Manifest.permission.CAMERA,
                                     Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PHOTO_AND_STORAGE);
                             dialog.show(getFragmentManager(), "explanation");
-                        }
-                    }
-                    break;
-                case REQUEST_SMS:
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("text/plain");
-                        intent.putExtra(Intent.EXTRA_TEXT, getGrudgeReport());
-                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.grudge_report_subject));
-                        intent = Intent.createChooser(intent, getString(R.string.send_report));
-                        startActivity(intent);
-                    } else {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.SEND_SMS)) {
-                            ExplanationDialog dialog = new ExplanationDialog().newInstance(
-                                    new String[]{Manifest.permission.SEND_SMS}, REQUEST_SMS);
-                            dialog.show(getFragmentManager(), "explanation");
-
-                        } else {
-                            //Opens permissions in settings
-                            Snackbar snackbar = Snackbar.make(getActivity()
-                                            .findViewById(R.id.fragment_grudge_relative_layout),
-                                    "No send sms permission", Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Open settings", v1 -> openSettings());
-                            snackbar.show();
                         }
                     }
                     break;

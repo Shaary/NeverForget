@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Никогда не забывай</string>
+    <string name="app_name">Не забудь!</string>
 
     <string name="grudge_title_hint">Введите название обиды</string>
     <string name="grudge_title_label">Название</string>
@@ -14,7 +14,7 @@
     <string name="grudge_forgiven_text">Прощено, но не забыто</string>
     <string name="grudge_choose_victim_button_text">Имя обидчика</string>
     <string name="grudge_send_grudge_button_text">Кинуть обидку</string>
-    <string name="grudge_message_format">%1$s, Я на тебя в обиде. %2$s в %3$s в %4$s. %5$s</string>
+    <string name="grudge_message_format">%1$s, я на тебя в обиде. %2$s.  Дата и время: %3$s в %4$s. %5$s</string>
     <string name="grudge_delete">Удалить</string>
     <string name="send_report">Кинуть обидку с помощью</string>
     <string name="grudge_report_subject">Обидка</string>
@@ -30,7 +30,6 @@
     <string name="explanation_photo_and_storage_title">Разрешить делать и сохранять фото?</string>
     <string name="explanation_sms_message">Это позволит вам кидать обидку через смс и другие приложения</string>
     <string name="explanation_sms_title">Разрешить доступ к сообщениям?</string>
-    <string name="grudge_message_female_format">%1$s, Я на тебя в обиде. %2$s в %3$s в %4$s. %5$s</string>
     <string name="gender_female">женский</string>
     <string name="gender_male">мужской</string>
     <string name="victim_gender_title">пол обидчика</string>
@@ -52,5 +51,6 @@
     <string name="default_name">Вредина</string>
     <string name="revenged_text">Отомщено</string>
     <string name="forgiven_question">Вы уверены?</string>
+    <string name="enter_the_name">Ввести имя</string>
 
 </resources>

@@ -14,8 +14,7 @@
     <string name="grudge_forgiven_text">Forgiven but not forgotten</string>
     <string name="grudge_choose_victim_button_text">Offender\'s name</string>
     <string name="grudge_send_grudge_button_text">Send grudge</string>
-    <string name="grudge_message_format">%1$s, I hold a grudge on you. %2$s on at %4$s. %5$s</string>
-    <string name="grudge_message_female_format">%1$s, I hold a grudge on you. %2$s on %3$s at %4$s. %5$s</string>
+    <string name="grudge_message_format">%1$s, I hold a grudge on you. %2$s on %3$s at %4$s. %5$s</string>
     <string name="grudge_delete">Delete</string>
     <string name="send_report">Send grudge report via</string>
     <string name="grudge_report_subject">Grudge Report</string>
@@ -52,5 +51,6 @@
     <string name="default_name">Extremely mean person</string>
     <string name="revenged_text">Revenged</string>
     <string name="forgiven_question">Are you sure?</string>
+    <string name="enter_the_name">Enter the name</string>
 
 </resources>
