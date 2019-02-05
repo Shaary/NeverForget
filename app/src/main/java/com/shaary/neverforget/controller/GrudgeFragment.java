@@ -320,8 +320,10 @@ public class GrudgeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID grudgeId = (UUID) getArguments().getSerializable(ARG_GRUDGE_ID);
-        grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
-        photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
+        //grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
+        //photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
+        grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
+        photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
         setHasOptionsMenu(true);
     }
 
@@ -383,8 +385,10 @@ public class GrudgeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        GrudgePit.get(getActivity())
-                .updateGrudge(grudge);
+//        GrudgePit.get(getActivity())
+//                .updateGrudge(grudge);
+        //Database updates on the conflict
+        GrudgePit.getInstance(getActivity()).addGrudge(grudge);
     }
 
     @Override
@@ -402,7 +406,9 @@ public class GrudgeFragment extends Fragment {
     }
 
     private void updateGrudge() {
-        GrudgePit.get(getActivity()).updateGrudge(grudge);
+        //GrudgePit.get(getActivity()).updateGrudge(grudge);
+        //Database updates on the conflict
+        GrudgePit.getInstance(getActivity()).addGrudge(grudge);
         callbacks.onGrudgeUpdated(grudge);
     }
 
@@ -448,7 +454,8 @@ public class GrudgeFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.grudge_delete:
-                GrudgePit.get(getActivity()).deleteGrudge(grudge);
+                //GrudgePit.get(getActivity()).deleteGrudge(grudge);
+                GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
                 getActivity().finish();
                 return true;
 

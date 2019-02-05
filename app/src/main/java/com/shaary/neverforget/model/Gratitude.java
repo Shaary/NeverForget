@@ -1,6 +1,5 @@
 package com.shaary.neverforget.model;
 
-
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -15,9 +14,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 @Entity
-public class Grudge {
-
-    @PrimaryKey @NonNull private UUID id;
+public class Gratitude {
+    @PrimaryKey
+    @NonNull
+    private UUID id;
     private String title;
     private Date date;
     private int years;
@@ -25,13 +25,13 @@ public class Grudge {
     private boolean isRevenge;
     private boolean isRevenged;
     private boolean isForgiven = false;
-    private String victim;
+    private String person;
     private String description;
     private String gender;
     private String time;
 
     //To create new
-    public Grudge() {
+    public Gratitude() {
         this.id = UUID.randomUUID();
         date = new Date();
         time = getTimeNow();
@@ -39,7 +39,7 @@ public class Grudge {
 
     //To restore from database
     @Ignore
-    public Grudge(UUID id) {
+    public Gratitude(UUID id) {
         this.id = id;
         date = new Date();
         time = getTimeNow();
@@ -160,12 +160,12 @@ public class Grudge {
         isForgiven = forgiven;
     }
 
-    public String getVictim() {
-        return victim;
+    public String getPerson() {
+        return person;
     }
 
-    public void setVictim(String victim) {
-        this.victim = victim;
+    public void setPerson(String person) {
+        this.person = person;
     }
 
     public String getDescription() {
@@ -187,5 +187,4 @@ public class Grudge {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
 }

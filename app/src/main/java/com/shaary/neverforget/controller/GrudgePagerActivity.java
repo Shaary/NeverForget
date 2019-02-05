@@ -47,7 +47,8 @@ public class GrudgePagerActivity extends AppCompatActivity
         UUID grudgeId = (UUID) getIntent()
                     .getSerializableExtra(EXTRA_GRUDGE_ID);
 
-        grudges = GrudgePit.get(this).getGrudges();
+        //grudges = GrudgePit.get(this).getGrudges();
+        grudges = GrudgePit.getInstance(this).getGrudgeList();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
