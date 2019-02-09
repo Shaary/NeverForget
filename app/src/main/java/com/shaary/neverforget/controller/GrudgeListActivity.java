@@ -29,7 +29,6 @@ public class GrudgeListActivity extends SingleFragmentActivity
             Intent intent = GrudgePagerActivity.newIntent(this, grudge.getId());
             startActivity(intent);
         } else {
-            //Log.d(TAG, "onGrudgeSelected: is called");
             Fragment newDetail = GrudgeFragment.newInstance(grudge.getId());
 
             getSupportFragmentManager().beginTransaction()
@@ -43,6 +42,6 @@ public class GrudgeListActivity extends SingleFragmentActivity
         GrudgeListFragment listFragment = (GrudgeListFragment)
                 getSupportFragmentManager()
                 .findFragmentById(R.id.container_layout);
-        //listFragment.updateUI();
+        listFragment.updateUI();
     }
 }

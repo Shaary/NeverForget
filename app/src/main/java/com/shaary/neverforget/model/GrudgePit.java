@@ -1,23 +1,27 @@
 package com.shaary.neverforget.model;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
+import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import com.shaary.neverforget.database.GrudgeDao;
+import com.shaary.neverforget.database.GrudgeBaseHelper;
+import com.shaary.neverforget.database.GrudgeCursorWrapper;
+import com.shaary.neverforget.database.GrudgeDbSchema.GrudgeTable;
 import com.shaary.neverforget.database.MyDatabase;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class GrudgePit {
 
     private static GrudgePit sGrudgePit;
-    private LiveData<List<Grudge>> grudges;
+    private List<Grudge> tasks;
     private Context context;
-    private GrudgeDao grudgeDao;
+    private MyDatabase database;
 
     public static GrudgePit getInstance(Context context) {
         if (sGrudgePit == null) {
@@ -29,64 +33,30 @@ public class GrudgePit {
     private GrudgePit(Context context) {
         this.context = context.getApplicationContext();
         //TODO: move to back thread
-        MyDatabase database = MyDatabase.getDatabase(context);
-        grudgeDao = database.grudgeDao();
-        grudges = grudgeDao.getAll();
+        database = Room.databaseBuilder(context, MyDatabase.class, "task-db")
+                .allowMainThreadQueries()
+                .build();
     }
 
     public void addGrudge(Grudge grudge) {
-        new insertAsyncTask(grudgeDao).execute(grudge);
+        database.grudgeDao().insert(grudge);
     }
 
-    public LiveData<List<Grudge>> getGrudgeLiveList() {
-        return grudges;
+    public List<Grudge> getGrudgeList() {
+        return database.grudgeDao().getAll();
     }
 
     public Grudge getGrudge(UUID id) {
-        return grudgeDao.getGrudgeById(id);
+        return database.grudgeDao().getGrudgeById(id);
     }
 
-//    public void deleteGrudgeById(UUID id) {
-//        database.grudgeDao().deleteGrudgeById(id);
-//    }
-
-    public void deleteGrudge(Grudge grudge) {
-        new deleteAsyncTask(grudgeDao).execute(grudge);
+    public void deleteGrudgeById(UUID id) {
+        database.grudgeDao().deleteGrudgeById(id);
     }
 
     public File getPhotoFile(Grudge grudge) {
         File filesDir = context.getFilesDir();
         return new File(filesDir, grudge.getPhotoFilename());
-    }
-
-    private static class insertAsyncTask extends AsyncTask<Grudge, Void, Void> {
-
-        private GrudgeDao mAsyncGrudgeDao;
-
-        insertAsyncTask(GrudgeDao dao) {
-            mAsyncGrudgeDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Grudge... params) {
-            mAsyncGrudgeDao.insert(params[0]);
-            return null;
-        }
-    }
-
-    private static class deleteAsyncTask extends AsyncTask<Grudge, Void, Void> {
-
-        private GrudgeDao mAsyncGrudgeDao;
-
-        deleteAsyncTask(GrudgeDao dao) {
-            mAsyncGrudgeDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Grudge... params) {
-            mAsyncGrudgeDao.delete(params[0]);
-            return null;
-        }
     }
 
 //    private static GrudgePit sGrudgePit;

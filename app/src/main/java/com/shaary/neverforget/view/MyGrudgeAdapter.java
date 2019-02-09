@@ -24,7 +24,8 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
         void onClick(Grudge grudge);
     }
 
-    public MyGrudgeAdapter(Listener listener) {
+    public MyGrudgeAdapter(List<Grudge> grudges, Listener listener) {
+        this.grudges = grudges;
         this.listener = listener;
     }
 
@@ -74,11 +75,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
 
     @Override
     public int getItemCount() {
-        if (grudges != null) {
-            return grudges.size();
-        } else {
-            return 0;
-        }
+        return grudges.size();
     }
 
     public class MyGrudgeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

@@ -126,8 +126,7 @@ public class GrudgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //Log.d(TAG, "onCreateView: language " + Locale.getDefault().getLanguage());
-        //Log.d(TAG, "onCreateView: is called");
+        Log.d(TAG, "onCreateView: language " + Locale.getDefault().getLanguage());
         View view = inflater.inflate(R.layout.fragment_grudge, container, false);
         ButterKnife.bind(this, view);
 
@@ -202,14 +201,14 @@ public class GrudgeFragment extends Fragment {
             newFragment.show(getFragmentManager(), "timePicker");
 
         });
-        //Log.d(TAG, "onCreateView: time " + grudge.getTime());
+        Log.d(TAG, "onCreateView: time " + grudge.getTime());
 
         //Sends intent to message sending apps
         sendButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, getGrudgeReport());
-            //Log.d(TAG, "onCreateView: grudge report " + getGrudgeReport());
+            Log.d(TAG, "onCreateView: grudge report " + getGrudgeReport());
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.grudge_report_subject));
             intent = Intent.createChooser(intent, getString(R.string.send_report));
             startActivity(intent);
@@ -244,7 +243,7 @@ public class GrudgeFragment extends Fragment {
         revengedCheckBox.setEnabled(grudge.isRevenge());
         revengedCheckBox.setChecked(grudge.isRevenged());
         if(grudge.isRevenged()) {
-            //Log.d(TAG, "onCreateView: revenged " + grudge.isRevenged());
+            Log.d(TAG, "onCreateView: revenged " + grudge.isRevenged());
             //Can't uncheck Revenge if already revenged
             revengeCheckBox.setEnabled(false);
         }
@@ -321,7 +320,6 @@ public class GrudgeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID grudgeId = (UUID) getArguments().getSerializable(ARG_GRUDGE_ID);
-        Log.d(TAG, "onCreate: grudgeId " + grudgeId);
         //grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
         //photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
         grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
@@ -457,9 +455,7 @@ public class GrudgeFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.grudge_delete:
                 //GrudgePit.get(getActivity()).deleteGrudge(grudge);
-                Log.d(TAG, "onOptionsItemSelected: delete grudgeId " + grudge.getId());
-                //GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
-                GrudgePit.getInstance(getActivity()).deleteGrudge(grudge);
+                GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
                 getActivity().finish();
                 return true;
 
