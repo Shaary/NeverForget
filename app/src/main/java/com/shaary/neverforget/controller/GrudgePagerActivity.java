@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
@@ -32,6 +31,7 @@ public class GrudgePagerActivity extends AppCompatActivity
 
     private List<Grudge> grudges;
 
+
     public static Intent newIntent(Context packageContext, UUID grudgeId) {
         Intent intent = new Intent(packageContext, GrudgePagerActivity.class);
         intent.putExtra(EXTRA_GRUDGE_ID, grudgeId);
@@ -48,7 +48,7 @@ public class GrudgePagerActivity extends AppCompatActivity
                     .getSerializableExtra(EXTRA_GRUDGE_ID);
 
         //grudges = GrudgePit.get(this).getGrudges();
-        grudges = GrudgePit.getInstance(this).getGrudgeList();
+        grudges = GrudgePit.getInstance(this).getGrudgeLiveList().getValue();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
@@ -60,21 +60,25 @@ public class GrudgePagerActivity extends AppCompatActivity
 
             @Override
             public int getCount() {
-                return grudges.size();
+                if (grudges != null) {
+                    return grudges.size();
+                } else {
+                    return 0;
+                }
             }
         });
 
         //Forwards you to the chosen grudge in the pager
-        for (int i = 0; i < grudges.size(); i++) {
-            if (grudges.get(i).getId().equals(grudgeId)) {
-                viewPager.setCurrentItem(i);
-                break;
-            }
-            if (grudges.get(i).getId() == null) {
-                viewPager.setCurrentItem(i+1);
-                break;
-            }
-        }
+//        for (int i = 0; i < grudges.size(); i++) {
+//            if (grudges.get(i).getId().equals(grudgeId)) {
+//                viewPager.setCurrentItem(i);
+//                break;
+//            }
+//            if (grudges.get(i).getId() == null) {
+//                viewPager.setCurrentItem(i+1);
+//                break;
+//            }
+//        }
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

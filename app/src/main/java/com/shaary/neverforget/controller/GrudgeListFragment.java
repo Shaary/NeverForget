@@ -1,5 +1,7 @@
 package com.shaary.neverforget.controller;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
+import com.shaary.neverforget.view.GrudgeViewModel;
 import com.shaary.neverforget.view.MyGrudgeAdapter;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     private MyGrudgeAdapter newAdapter;
     private boolean isSubtitleVisible;
     private Callbacks callbacks;
+    private GrudgeViewModel grudgeViewModel;
 
     @Override
     public void onClick(Grudge grudge) {
@@ -62,8 +66,10 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
         if (savedInstanceState != null) {
             isSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
+        newAdapter = new MyGrudgeAdapter(this);
+        recyclerView.setAdapter(newAdapter);
 
-        updateUI();
+        //updateUI();
         return view;
     }
 
@@ -71,28 +77,38 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        grudgeViewModel = ViewModelProviders.of(this).get(GrudgeViewModel.class);
+
+        grudgeViewModel.getGrudges().observe(this, new Observer<List<Grudge>>() {
+            @Override
+            public void onChanged(@Nullable List<Grudge> grudges) {
+                newAdapter.setGrudges(grudges);
+            }
+        });
+
     }
 
-    public void updateUI() {
-        Log.d(TAG, "updateUI: called");
-        //GrudgePit grudgePit = GrudgePit.get(getActivity());
-        GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
-        //List<Grudge> grudges = grudgePit.getGrudges();
-        List<Grudge> grudges = grudgePit.getGrudgeList();
-
-        if (newAdapter == null) {
-            newAdapter = new MyGrudgeAdapter(grudges, this);
-            //Log.d(TAG, "updateUI: callbacks " + callbacks);
-            //adapter = new GrudgeAdapter(grudges);
-            recyclerView.setAdapter(newAdapter);
-        } else {
-
-            //TODO: use DiffUtil
-            newAdapter.setGrudges(grudges);
-            newAdapter.notifyDataSetChanged();
-        }
-        updateSubtitle();
-    }
+//    public void updateUI() {
+//        Log.d(TAG, "updateUI: called");
+//        //GrudgePit grudgePit = GrudgePit.get(getActivity());
+//        GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
+//        //List<Grudge> grudges = grudgePit.getGrudges();
+//        List<Grudge> grudges = grudgePit.getGrudgeLiveList();
+//
+//        if (newAdapter == null) {
+//            newAdapter = new MyGrudgeAdapter(grudges, this);
+//            //Log.d(TAG, "updateUI: callbacks " + callbacks);
+//            //adapter = new GrudgeAdapter(grudges);
+//            recyclerView.setAdapter(newAdapter);
+//        } else {
+//
+//            //TODO: use DiffUtil
+//            newAdapter.setGrudges(grudges);
+//            newAdapter.notifyDataSetChanged();
+//        }
+//        updateSubtitle();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -109,7 +125,7 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     @Override
     public void onResume() {
         super.onResume();
-        updateUI();
+        //updateUI();
     }
 
     @Override
@@ -132,34 +148,34 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
                 Grudge grudge = new Grudge();
                 //GrudgePit.get(getActivity()).addGrudge(grudge);
                 GrudgePit.getInstance(getActivity()).addGrudge(grudge);
-                updateUI();
+                //updateUI();
                 callbacks.onGrudgeSelected(grudge);
                 return true;
 
             case R.id.show_subtitle:
                 isSubtitleVisible = !isSubtitleVisible;
                 getActivity().invalidateOptionsMenu();
-                updateSubtitle();
+                //updateSubtitle();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private void updateSubtitle() {
-        //GrudgePit grudgePit = GrudgePit.get(getActivity());
-        GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
-        //int grudgeCount = grudgePit.getGrudges().size();
-        int grudgeCount = grudgePit.getGrudgeList().size();
-        String subtitle = getString(R.string.subtitle_format, grudgeCount);
-
-        if(!isSubtitleVisible) {
-            subtitle = null;
-        }
-
-        Log.d(TAG, "updateSubtitle: subtitle " + subtitle);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setTitle(subtitle);
-    }
+//
+//    private void updateSubtitle() {
+//        //GrudgePit grudgePit = GrudgePit.get(getActivity());
+//        GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
+//        //int grudgeCount = grudgePit.getGrudges().size();
+//        int grudgeCount = grudgePit.getGrudgeLiveList().size();
+//        String subtitle = getString(R.string.subtitle_format, grudgeCount);
+//
+//        if(!isSubtitleVisible) {
+//            subtitle = null;
+//        }
+//
+//        Log.d(TAG, "updateSubtitle: subtitle " + subtitle);
+//        AppCompatActivity activity = (AppCompatActivity) getActivity();
+//        activity.getSupportActionBar().setTitle(subtitle);
+//    }
 }
