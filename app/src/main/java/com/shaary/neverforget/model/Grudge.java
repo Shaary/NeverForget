@@ -17,7 +17,7 @@ import java.util.UUID;
 @Entity
 public class Grudge {
 
-    @PrimaryKey @NonNull private UUID id;
+    @PrimaryKey(autoGenerate = true) private long id;
     private String title;
     private Date date;
     private int years;
@@ -32,15 +32,6 @@ public class Grudge {
 
     //To create new
     public Grudge() {
-        this.id = UUID.randomUUID();
-        date = new Date();
-        time = getTimeNow();
-    }
-
-    //To restore from database
-    @Ignore
-    public Grudge(UUID id) {
-        this.id = id;
         date = new Date();
         time = getTimeNow();
     }
@@ -52,7 +43,12 @@ public class Grudge {
     }
 
     //TODO: think about changing the structure: use int instead of UUID
-    public UUID getId() {
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
         return id;
     }
 
@@ -116,10 +112,6 @@ public class Grudge {
         return pattern;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public void setTime(String time) {
         this.time = time;
     }
@@ -177,7 +169,7 @@ public class Grudge {
     }
 
     public String getPhotoFilename() {
-        return "IMG_" + getId().toString() + ".jpg";
+        return "IMG_" + getId() + ".jpg";
     }
 
     public String getGender() {

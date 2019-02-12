@@ -24,12 +24,12 @@ public class GrudgeListActivity extends SingleFragmentActivity
     }
 
     @Override
-    public void onGrudgeSelected(Grudge grudge) {
+    public void onGrudgeSelected(long grudgeId) {
         if (findViewById(R.id.detail_fragment_container) == null) {
-            Intent intent = GrudgePagerActivity.newIntent(this, grudge.getId());
+            Intent intent = GrudgePagerActivity.newIntent(this, grudgeId);
             startActivity(intent);
         } else {
-            Fragment newDetail = GrudgeFragment.newInstance(grudge.getId());
+            Fragment newDetail = GrudgeFragment.newInstance(grudgeId);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_fragment_container, newDetail)

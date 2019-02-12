@@ -21,7 +21,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
     private Listener listener;
 
     public interface Listener {
-        void onClick(Grudge grudge);
+        void onClick(long grudgeId);
     }
 
     public MyGrudgeAdapter(List<Grudge> grudges, Listener listener) {
@@ -112,7 +112,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
 
         @Override
         public void onClick(View v) {
-            listener.onClick(grudge);
+            listener.onClick(grudge.getId());
             Log.d(TAG, "onClick: called ");
         }
     }

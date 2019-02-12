@@ -37,12 +37,12 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     private Callbacks callbacks;
 
     @Override
-    public void onClick(Grudge grudge) {
-        callbacks.onGrudgeSelected(grudge);
+    public void onClick(long grudgeId) {
+        callbacks.onGrudgeSelected(grudgeId);
     }
 
     public interface Callbacks {
-        void onGrudgeSelected(Grudge grudge);
+        void onGrudgeSelected(long grudgeId);
     }
 
     @Override
@@ -75,9 +75,7 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
 
     public void updateUI() {
         Log.d(TAG, "updateUI: called");
-        //GrudgePit grudgePit = GrudgePit.get(getActivity());
         GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
-        //List<Grudge> grudges = grudgePit.getGrudges();
         List<Grudge> grudges = grudgePit.getGrudgeList();
 
         if (newAdapter == null) {
@@ -86,7 +84,6 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
             //adapter = new GrudgeAdapter(grudges);
             recyclerView.setAdapter(newAdapter);
         } else {
-
             //TODO: use DiffUtil
             newAdapter.setGrudges(grudges);
             newAdapter.notifyDataSetChanged();
@@ -130,10 +127,10 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
         switch (item.getItemId()) {
             case R.id.new_grudge:
                 Grudge grudge = new Grudge();
-                //GrudgePit.get(getActivity()).addGrudge(grudge);
-                GrudgePit.getInstance(getActivity()).addGrudge(grudge);
+                long id = GrudgePit.getInstance(getActivity()).addGrudge(grudge);
+                Log.d(TAG, "onOptionsItemSelected: new grudge id " + id);
                 updateUI();
-                callbacks.onGrudgeSelected(grudge);
+                callbacks.onGrudgeSelected(id);
                 return true;
 
             case R.id.show_subtitle:
@@ -148,9 +145,7 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     }
 
     private void updateSubtitle() {
-        //GrudgePit grudgePit = GrudgePit.get(getActivity());
         GrudgePit grudgePit = GrudgePit.getInstance(getActivity());
-        //int grudgeCount = grudgePit.getGrudges().size();
         int grudgeCount = grudgePit.getGrudgeList().size();
         String subtitle = getString(R.string.subtitle_format, grudgeCount);
 

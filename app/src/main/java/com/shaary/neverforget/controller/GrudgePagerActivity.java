@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -24,6 +25,8 @@ import butterknife.ButterKnife;
 public class GrudgePagerActivity extends AppCompatActivity
         implements GrudgeFragment.Callbacks{
 
+    public static final String TAG = GrudgePagerActivity.class.getSimpleName();
+
     private static final String EXTRA_GRUDGE_ID = "com.shaary.android.grudgeintent.grudge_id";
 
     @BindView(R.id.grudge_view_pager) ViewPager viewPager;
@@ -32,7 +35,7 @@ public class GrudgePagerActivity extends AppCompatActivity
 
     private List<Grudge> grudges;
 
-    public static Intent newIntent(Context packageContext, UUID grudgeId) {
+    public static Intent newIntent(Context packageContext, long grudgeId) {
         Intent intent = new Intent(packageContext, GrudgePagerActivity.class);
         intent.putExtra(EXTRA_GRUDGE_ID, grudgeId);
         return intent;
@@ -44,11 +47,11 @@ public class GrudgePagerActivity extends AppCompatActivity
         setContentView(R.layout.activity_grudge_pager);
         ButterKnife.bind(this);
 
-        UUID grudgeId = (UUID) getIntent()
-                    .getSerializableExtra(EXTRA_GRUDGE_ID);
+        long grudgeId = getIntent().getLongExtra(EXTRA_GRUDGE_ID, 0);
 
         //grudges = GrudgePit.get(this).getGrudges();
         grudges = GrudgePit.getInstance(this).getGrudgeList();
+        Log.d(TAG, "onCreate: pager grudges number " + grudges.size());
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
@@ -66,11 +69,11 @@ public class GrudgePagerActivity extends AppCompatActivity
 
         //Forwards you to the chosen grudge in the pager
         for (int i = 0; i < grudges.size(); i++) {
-            if (grudges.get(i).getId().equals(grudgeId)) {
+            if (grudges.get(i).getId() == (grudgeId)) {
                 viewPager.setCurrentItem(i);
                 break;
             }
-            if (grudges.get(i).getId() == null) {
+            if (grudges.get(i).getId() == 0) {
                 viewPager.setCurrentItem(i+1);
                 break;
             }

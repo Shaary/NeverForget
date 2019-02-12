@@ -100,7 +100,7 @@ public class GrudgeFragment extends Fragment {
     @BindView(R.id.grudge_scroll_view) ScrollView layout;
 
 
-    public static GrudgeFragment newInstance(UUID grudgeId) {
+    public static GrudgeFragment newInstance(long grudgeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_GRUDGE_ID, grudgeId);
 
@@ -126,7 +126,8 @@ public class GrudgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d(TAG, "onCreateView: language " + Locale.getDefault().getLanguage());
+        //Log.d(TAG, "onCreateView: language " + Locale.getDefault().getLanguage());
+        Log.d(TAG, "onCreateView: open id " + grudge.getId());
         View view = inflater.inflate(R.layout.fragment_grudge, container, false);
         ButterKnife.bind(this, view);
 
@@ -319,9 +320,8 @@ public class GrudgeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UUID grudgeId = (UUID) getArguments().getSerializable(ARG_GRUDGE_ID);
-        //grudge = GrudgePit.get(getActivity()).getGrudge(grudgeId);
-        //photoFile = GrudgePit.get(getActivity()).getPhotoFile(grudge);
+        long grudgeId = getArguments().getLong(ARG_GRUDGE_ID);
+        Log.d(TAG, "onCreate: grudge id " + grudgeId);
         grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
         photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
         setHasOptionsMenu(true);
@@ -385,10 +385,7 @@ public class GrudgeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-//        GrudgePit.get(getActivity())
-//                .updateGrudge(grudge);
-        //Database updates on the conflict
-        GrudgePit.getInstance(getActivity()).addGrudge(grudge);
+        GrudgePit.getInstance(getActivity()).updateGrudge(grudge);
     }
 
     @Override
@@ -406,9 +403,8 @@ public class GrudgeFragment extends Fragment {
     }
 
     private void updateGrudge() {
-        //GrudgePit.get(getActivity()).updateGrudge(grudge);
         //Database updates on the conflict
-        GrudgePit.getInstance(getActivity()).addGrudge(grudge);
+        GrudgePit.getInstance(getActivity()).updateGrudge(grudge);
         callbacks.onGrudgeUpdated(grudge);
     }
 
@@ -455,7 +451,9 @@ public class GrudgeFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.grudge_delete:
                 //GrudgePit.get(getActivity()).deleteGrudge(grudge);
+                Log.d(TAG, "onOptionsItemSelected: delete id " + grudge.getId());
                 GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
+                //GrudgePit.getInstance(getActivity()).deleteGrudge(grudge);
                 getActivity().finish();
                 return true;
 
