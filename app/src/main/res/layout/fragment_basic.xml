@@ -5,15 +5,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/grudge_scroll_view">
+    android:id="@+id/basic_scroll_view">
 
     <RelativeLayout
+        android:id="@+id/basic_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".controller.GrudgeFragment"
-        android:id="@+id/fragment_grudge_relative_layout"
         android:padding="16dp">
 
+        <ImageView
+            android:id="@+id/basic_imageView"
+            android:layout_width="80dp"
+            android:layout_height="89dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:layout_margin="5dp"
+            android:src="@android:drawable/progress_indeterminate_horizontal"/>
+
+        <ImageButton
+            android:id="@+id/basic_photo_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/basic_imageView"
+            android:src="@android:drawable/ic_menu_camera" />
 
         <TextView
             android:id="@+id/grudge_text_view"
@@ -21,8 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/grudge_image_view"
-            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@+id/basic_imageView"
+            android:layout_alignParentEnd="true"
             android:text="@string/grudge_title_label" />
 
         <EditText
@@ -32,62 +47,62 @@
             android:ems="10"
             android:hint="@string/grudge_title_hint"
             android:inputType="textCapSentences|textMultiLine"
-            android:layout_toEndOf="@+id/grudge_image_view"
-            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@+id/basic_imageView"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/grudge_text_view"/>
 
         <TextView
-            android:id="@+id/grudge_description_label"
+            android:id="@+id/basic_description_label"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/grudge_details_label"
-            android:layout_below="@id/grudge_photo_button" />
+            android:layout_below="@id/basic_photo_button" />
 
         <EditText
-            android:id="@+id/grudge_description_text"
+            android:id="@+id/basic_description_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="100"
             android:hint="@string/grudge_descrip_hint_text"
             android:inputType="textCapSentences|textMultiLine"
-            android:layout_below="@id/grudge_description_label" />
+            android:layout_below="@id/basic_description_label" />
 
         <LinearLayout
+            android:id="@+id/basic_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/grudge_button_layout"
-            android:layout_below="@+id/grudge_description_text">
+            android:layout_below="@+id/basic_description_text">
 
             <Button
-                android:id="@+id/grudge_date_button"
+                android:id="@+id/basic_date_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
 
             <Button
-                android:id="@+id/grudge_time_button"
+                android:id="@+id/basic_time_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/checkbox_layout"
+            android:id="@+id/basic_checkbox_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/grudge_button_layout">
+            android:layout_below="@id/basic_button_layout">
             <CheckBox
-                android:id="@+id/grudge_remind"
+                android:id="@+id/basic_remind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/grudge_remind_label"
                 android:visibility="invisible"/>
 
             <CheckBox
-                android:id="@+id/grudge_revenge"
+                android:id="@+id/basic_action1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/grudge_revenge_label"
@@ -95,7 +110,7 @@
                 android:textStyle="bold" />
 
             <CheckBox
-                android:id="@+id/grudge_forgive"
+                android:id="@+id/basic_action2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/grudge_forgive_checkbox"
@@ -104,54 +119,12 @@
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/grudge_forgiven_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkbox_layout"
-            android:text="@string/forgiven_question"
-            android:textColor="@android:color/background_light"
-            android:textStyle="bold|italic"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/grudge_victim_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/grudge_choose_victim_button_text"
-            android:layout_below="@id/grudge_forgiven_text"/>
-
-        <Button
-            android:id="@+id/grudge_send_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/grudge_send_grudge_button_text"
-            android:layout_below="@id/grudge_victim_button" />
-
-        <ImageView
-            android:id="@+id/grudge_image_view"
-            android:layout_width="80dp"
-            android:layout_height="89dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:layout_margin="5dp"
-            android:src="@android:drawable/progress_indeterminate_horizontal" />
-
-        <ImageButton
-            android:id="@+id/grudge_photo_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/grudge_image_view"
-            android:src="@android:drawable/ic_menu_camera" />
-
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/grudge_button_layout"
-            android:layout_toEndOf="@+id/checkbox_layout"
+            android:layout_below="@+id/basic_button_layout"
+            android:layout_toEndOf="@+id/basic_checkbox_layout"
             android:visibility="invisible"/>
 
         <CheckBox
@@ -159,10 +132,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/checkBox"
-            android:layout_toEndOf="@+id/checkbox_layout"
+            android:layout_toEndOf="@+id/basic_checkbox_layout"
             android:enabled="false"
             android:text="@string/revenged_text"
             android:textColor="@android:color/background_light"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/basic_action_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/basic_checkbox_layout"
+            android:text="@string/forgiven_question"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold|italic"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/basic_person_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/grudge_choose_victim_button_text"
+            android:layout_below="@id/basic_action_text"/>
+
+        <Button
+            android:id="@+id/basic_send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/grudge_send_grudge_button_text"
+            android:layout_below="@id/basic_person_button" />
+
     </RelativeLayout>
+
+
 </ScrollView>

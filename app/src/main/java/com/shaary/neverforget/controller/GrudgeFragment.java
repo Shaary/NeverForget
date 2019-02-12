@@ -426,6 +426,7 @@ public class GrudgeFragment extends Fragment {
         }
 
         String description = grudge.getDescription();
+        //Log.d(TAG, "getGrudgeReport: description " + description);
         if (description == null) {
             description = getString(R.string.grudge_description);
         }
