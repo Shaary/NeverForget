@@ -58,7 +58,8 @@ public class GrudgePagerActivity extends AppCompatActivity
             @Override
             public Fragment getItem(int position) {
                 Grudge grudge = grudges.get(position);
-                return GrudgeFragment.newInstance(grudge.getId());
+                //return GrudgeFragment.newInstance(grudge.getId());
+                return BasicFragment.newInstance(grudge.getId());
             }
 
             @Override

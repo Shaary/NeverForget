@@ -29,7 +29,8 @@ public class GrudgeListActivity extends SingleFragmentActivity
             Intent intent = GrudgePagerActivity.newIntent(this, grudgeId);
             startActivity(intent);
         } else {
-            Fragment newDetail = GrudgeFragment.newInstance(grudgeId);
+            //Fragment newDetail = GrudgeFragment.newInstance(grudgeId);
+            Fragment newDetail = BasicFragment.newInstance(grudgeId);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_fragment_container, newDetail)
