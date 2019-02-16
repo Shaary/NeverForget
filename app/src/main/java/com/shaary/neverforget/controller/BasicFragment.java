@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.shaary.neverforget.R;
+import com.shaary.neverforget.ViewModel.BasicFragmentVM;
 import com.shaary.neverforget.databinding.FragmentBasicBinding;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
@@ -34,6 +35,7 @@ public class BasicFragment extends Fragment {
     private static final String TAG = BasicFragment.class.getSimpleName();
     public static final String ARG_GRUDGE_ID = "grudge_id";
 
+    private BasicFragmentVM viewModel;
     private Grudge grudge;
     private File photoFile;
     private GrudgeFragment.Callbacks callbacks;
@@ -80,6 +82,7 @@ public class BasicFragment extends Fragment {
 
         long grudgeId = getArguments().getLong(ARG_GRUDGE_ID);
         Log.d(TAG, "onCreate: grudge id " + grudgeId);
+        viewModel = new BasicFragmentVM(getContext(), grudgeId);
         grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
         photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
 
