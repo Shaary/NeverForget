@@ -1,4 +1,4 @@
-package com.shaary.neverforget.ViewModel;
+package com.shaary.neverforget.viewModel;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
@@ -8,8 +8,6 @@ import android.support.annotation.NonNull;
 import com.shaary.neverforget.BR;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
-
-import java.util.Date;
 
 public class BasicFragmentVM extends BaseObservable {
     //TODO: use two way binding for edit text
@@ -65,14 +63,14 @@ public class BasicFragmentVM extends BaseObservable {
         notifyPropertyChanged(BR.time);
     }
 
-    @Bindable
-    public String getFormattedDate() {
-        return grudge.getFormattedDate();
-    }
-
-    public void getDate(Date date) {
-        grudge.setDate(date);
-        grudgePit.updateGrudge(grudge);
-        notifyPropertyChanged(BR.date);
-    }
+//    @Bindable
+//    public String getFormattedDate() {
+//        return grudge.getFormattedDate();
+//    }
+//
+//    public void getDate(Date date) {
+//        grudge.setDate(date);
+//        grudgePit.updateGrudge(grudge);
+//        notifyPropertyChanged(BR.date);
+//    }
 }

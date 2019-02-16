@@ -2,13 +2,8 @@ package com.shaary.neverforget.model;
 
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.support.annotation.NonNull;
-
-import com.shaary.neverforget.BR;
 
 import java.sql.Time;
 import java.text.Format;
@@ -16,10 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 @Entity
-public class Grudge extends BaseObservable {
+public class Grudge {
 
     @PrimaryKey(autoGenerate = true) private long id;
     private String title;
@@ -164,14 +158,12 @@ public class Grudge extends BaseObservable {
         this.victim = victim;
     }
 
-    @Bindable
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-        notifyPropertyChanged(BR.description);
     }
 
     public String getPhotoFilename() {

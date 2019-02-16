@@ -3,7 +3,7 @@
     <data>
         <variable
             name="event"
-            type="com.shaary.neverforget.model.Grudge"/>
+            type="com.shaary.neverforget.viewModel.BasicFragmentVM"/>
     </data>
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -55,7 +55,7 @@
                 android:layout_toEndOf="@+id/basic_imageView"
                 android:ems="10"
                 android:hint="@string/grudge_title_hint"
-                android:text="@{event.title}"
+                android:text="@={event.title}"
                 android:inputType="textCapSentences|textMultiLine" />
 
             <TextView
@@ -87,7 +87,6 @@
                     android:id="@+id/basic_date_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={event.formattedDate}"
                     android:layout_weight="1"/>
 
                 <Button

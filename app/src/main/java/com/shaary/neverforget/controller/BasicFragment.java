@@ -9,23 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.shaary.neverforget.R;
-import com.shaary.neverforget.ViewModel.BasicFragmentVM;
+import com.shaary.neverforget.viewModel.BasicFragmentVM;
 import com.shaary.neverforget.databinding.FragmentBasicBinding;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 
 import java.io.File;
-
-import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,7 +61,7 @@ public class BasicFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basic, container, false);
-        binding.setEvent(grudge);
+        binding.setEvent(viewModel);
         View view = binding.getRoot();
 
         return view;
