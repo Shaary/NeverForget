@@ -4,6 +4,10 @@
         <variable
             name="event"
             type="com.shaary.neverforget.viewModel.BasicFragmentVM"/>
+
+        <variable
+            name="model"
+            type="com.shaary.neverforget.model.Grudge"/>
     </data>
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,7 +15,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/basic_scroll_view">
+        android:id="@+id/basic_scroll_view"
+        android:background="@drawable/grudge_gradient">
 
         <RelativeLayout
             android:id="@+id/basic_relative_layout"
@@ -87,7 +92,9 @@
                     android:id="@+id/basic_date_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:text="@{model.formattedDate}"
+                    />
 
                 <Button
                     android:id="@+id/basic_time_button"
@@ -116,7 +123,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/grudge_revenge_label"
                     android:textColor="@android:color/background_light"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:checked="@={event.action1}"/>
 
                 <CheckBox
                     android:id="@+id/basic_action2"
@@ -124,7 +132,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/grudge_forgive_checkbox"
                     android:textColor="@android:color/background_light"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:checked="@={event.action2}"/>
 
             </LinearLayout>
 
@@ -137,15 +146,16 @@
                 android:visibility="invisible"/>
 
             <CheckBox
-                android:id="@+id/grudge_revenged"
+                android:id="@+id/action1_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/checkBox"
                 android:layout_toEndOf="@+id/basic_checkbox_layout"
-                android:enabled="false"
+                android:enabled="@{event.action1CompleteEnabled}"
                 android:text="@string/revenged_text"
                 android:textColor="@android:color/background_light"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:checked="@={event.action1Completed}"/>
 
             <TextView
                 android:id="@+id/basic_action_text"

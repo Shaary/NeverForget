@@ -3,6 +3,7 @@ package com.shaary.neverforget.viewModel;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import com.shaary.neverforget.BR;
@@ -10,13 +11,18 @@ import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 
 public class BasicFragmentVM extends BaseObservable {
-    //TODO: use two way binding for edit text
-    GrudgePit grudgePit;
+
+    private GrudgePit repository;
     private Grudge grudge;
+    private Context context;
+
+    public final ObservableField<String> description = new ObservableField<>();
+    public final ObservableField<String> title = new ObservableField<>();
 
     public BasicFragmentVM(@NonNull Context context, long id) {
-        grudgePit = GrudgePit.getInstance(context);
-        grudge = grudgePit.getGrudge(id);
+        repository = GrudgePit.getInstance(context);
+        grudge = repository.getGrudge(id);
+        context = context.getApplicationContext();
     }
 
     @Bindable
@@ -25,9 +31,9 @@ public class BasicFragmentVM extends BaseObservable {
     }
 
     public void setDescription(String description) {
+        this.description.set(description);
         grudge.setDescription(description);
-        grudgePit.updateGrudge(grudge);
-        notifyPropertyChanged(BR.description);
+        repository.updateGrudge(grudge);
     }
 
     @Bindable
@@ -36,19 +42,27 @@ public class BasicFragmentVM extends BaseObservable {
     }
 
     public void setTitle(String title) {
+        this.title.set(title);
         grudge.setTitle(title);
-        grudgePit.updateGrudge(grudge);
-        notifyPropertyChanged(BR.title);
+        repository.updateGrudge(grudge);
     }
 
     @Bindable
     public String getName() {
-        return grudge.getVictim();
+        String name = "";
+        if (grudge.getVictim() != null) {
+            if (!grudge.getVictim().isEmpty()) {
+                name = grudge.getVictim();
+            }
+        } else {
+            name = "OFFENDER'S NAME";
+        }
+        return name;
     }
 
     public void setName(String name) {
         grudge.setVictim(name);
-        grudgePit.updateGrudge(grudge);
+        repository.updateGrudge(grudge);
         notifyPropertyChanged(BR.name);
     }
 
@@ -59,18 +73,60 @@ public class BasicFragmentVM extends BaseObservable {
 
     public void setTime(String time) {
         grudge.setTime(time);
-        grudgePit.updateGrudge(grudge);
+        repository.updateGrudge(grudge);
         notifyPropertyChanged(BR.time);
     }
 
-//    @Bindable
-//    public String getFormattedDate() {
-//        return grudge.getFormattedDate();
-//    }
-//
-//    public void getDate(Date date) {
-//        grudge.setDate(date);
-//        grudgePit.updateGrudge(grudge);
-//        notifyPropertyChanged(BR.date);
-//    }
+    @Bindable
+    public boolean getAction1() {
+        return grudge.isRevenge();
+    }
+
+    public void setAction1(boolean isAction1) {
+        grudge.setRevenge(isAction1);
+        repository.updateGrudge(grudge);
+        notifyPropertyChanged(BR.action1);
+        notifyPropertyChanged(BR.action1CompleteEnabled);
+    }
+
+    @Bindable
+    public boolean getAction2() {
+        return grudge.isForgiven();
+    }
+
+    public void setAction2(boolean isAction2) {
+        grudge.setForgiven(isAction2);
+        repository.updateGrudge(grudge);
+        notifyPropertyChanged(BR.action1);
+        notifyPropertyChanged(BR.action1CompleteEnabled);
+    }
+
+    @Bindable
+    public boolean getAction1Completed() {
+        return grudge.isRevenged();
+    }
+
+    public void setAction1Completed(boolean isCompleted) {
+        grudge.setRevenged(isCompleted);
+        repository.updateGrudge(grudge);
+        notifyPropertyChanged(BR.action1);
+    }
+
+    @Bindable
+    public boolean getAction1CompleteEnabled() {
+        if (grudge.isForgiven()) {
+            return false;
+        } else if (grudge.isRevenge()) {
+            return true;
+        }
+        return false;
+    }
+
+    //TODO: bind date
+    //TODO: set date onclick
+    //TODO: set time onclick
+    //TODO: set name onclick
+    //TODO: set picture onclick
+    //TODO: set background
+
 }

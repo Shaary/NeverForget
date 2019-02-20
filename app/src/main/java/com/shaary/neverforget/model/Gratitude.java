@@ -15,9 +15,7 @@ import java.util.UUID;
 
 @Entity
 public class Gratitude {
-    @PrimaryKey
-    @NonNull
-    private UUID id;
+    @PrimaryKey(autoGenerate = true) private long id;
     private String title;
     private Date date;
     private int years;
@@ -32,15 +30,6 @@ public class Gratitude {
 
     //To create new
     public Gratitude() {
-        this.id = UUID.randomUUID();
-        date = new Date();
-        time = getTimeNow();
-    }
-
-    //To restore from database
-    @Ignore
-    public Gratitude(UUID id) {
-        this.id = id;
         date = new Date();
         time = getTimeNow();
     }
@@ -51,8 +40,7 @@ public class Gratitude {
         return simpleDateFormat.format(date);
     }
 
-    //TODO: think about changing the structure: use int instead of UUID
-    public UUID getId() {
+    public long getId() {
         return id;
     }
 
@@ -116,7 +104,7 @@ public class Gratitude {
         return pattern;
     }
 
-    public void setId(UUID id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -177,7 +165,7 @@ public class Gratitude {
     }
 
     public String getPhotoFilename() {
-        return "IMG_" + getId().toString() + ".jpg";
+        return "IMG_" + getId() + ".jpg";
     }
 
     public String getGender() {

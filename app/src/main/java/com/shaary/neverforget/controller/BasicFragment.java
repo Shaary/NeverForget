@@ -4,13 +4,19 @@ package com.shaary.neverforget.controller;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.shaary.neverforget.R;
+import com.shaary.neverforget.view.InfoFragment;
 import com.shaary.neverforget.viewModel.BasicFragmentVM;
 import com.shaary.neverforget.databinding.FragmentBasicBinding;
 import com.shaary.neverforget.model.Grudge;
@@ -33,21 +39,6 @@ public class BasicFragment extends Fragment {
 
     //data binding
     FragmentBasicBinding binding;
-
-//    @BindView(R.id.basic_title) EditText titleField;
-//    @BindView(R.id.basic_description_text) EditText descriptionField;
-//    @BindView(R.id.basic_date_button) Button dateButton;
-//    @BindView(R.id.basic_time_button) Button timeButton;
-//    @BindView(R.id.basic_send_button) Button sendButton;
-//    @BindView(R.id.basic_person_button) Button victimButton;
-//    @BindView(R.id.basic_remind) CheckBox remindCheckBox;
-//    @BindView(R.id.basic_action1) CheckBox revengeCheckBox;
-//    @BindView(R.id.grudge_revenged) CheckBox revengedCheckBox;
-//    @BindView(R.id.basic_action2) CheckBox forgiveCheckBox;
-//    @BindView(R.id.basic_action_text) TextView forgiveText;
-//    @BindView(R.id.basic_imageView) ImageView grudgeImage;
-//    @BindView(R.id.basic_photo_button) ImageButton photoButton;
-//    @BindView(R.id.basic_scroll_view) ScrollView layout;
 
     public static BasicFragment newInstance(long grudgeId) {
         Bundle args = new Bundle();
@@ -78,5 +69,41 @@ public class BasicFragment extends Fragment {
         photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
 
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Prevents soft keyboard from popping up when open the fragment
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_grudge, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.grudge_delete:
+                GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
+                getActivity().finish();
+                return true;
+
+            case R.id.grudge_info:
+                InfoFragment infoFragment = new InfoFragment();
+                infoFragment.show(getFragmentManager(), "info");
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -328,53 +328,6 @@ public class GrudgeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data
-                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            grudge.setDate(date);
-            updateGrudge();
-            updateDate();
-        } else if (requestCode == REQUEST_TIME) {
-            int hour = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_HOUR);
-            int minute = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_MINUTE);
-            grudge.setTime(hour, minute);
-            Log.d(TAG, "onActivityResult: setTime " + grudge.getTime());
-            updateTime();
-
-        } else if (requestCode == REQUEST_CONTACT && data != null){
-            String name = data.getStringExtra("victim");
-            grudge.setGender(data.getStringExtra("gender"));
-
-            grudge.setVictim(name);
-            updateGrudge();
-            if (name != null && name.length() > 0) {
-                Log.d(TAG, "onActivityResult if: set name " + name);
-                victimButton.setText(name);
-            } else {
-                Log.d(TAG, "onActivityResult else: set name " + name);
-                victimButton.setText(R.string.grudge_choose_victim_button_text);
-            }
-        } else if (requestCode == REQUEST_PHOTO) {
-            Uri uri = FileProvider.getUriForFile(getActivity(),
-                    "com.shaary.android.grudgeintent.fileprovider",
-                    photoFile);
-            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            updateGrudge();
-            updateGrudgeImage();
-        } else if (requestCode == REQUEST_DELETE_IMAGE) {
-            String delete = data.getStringExtra("delete");
-            if (delete.equals("delete")) {
-                photoFile.delete();
-                updateGrudgeImage();
-            }
-        }
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         //Prevents soft keyboard from popping up when open the fragment
@@ -472,6 +425,54 @@ public class GrudgeFragment extends Fragment {
         intent.setData(uri);
         startActivity(intent);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            grudge.setDate(date);
+            updateGrudge();
+            updateDate();
+        } else if (requestCode == REQUEST_TIME) {
+            int hour = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_HOUR);
+            int minute = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_MINUTE);
+            grudge.setTime(hour, minute);
+            Log.d(TAG, "onActivityResult: setTime " + grudge.getTime());
+            updateTime();
+
+        } else if (requestCode == REQUEST_CONTACT && data != null){
+            String name = data.getStringExtra("victim");
+            grudge.setGender(data.getStringExtra("gender"));
+
+            grudge.setVictim(name);
+            updateGrudge();
+            if (name != null && name.length() > 0) {
+                Log.d(TAG, "onActivityResult if: set name " + name);
+                victimButton.setText(name);
+            } else {
+                Log.d(TAG, "onActivityResult else: set name " + name);
+                victimButton.setText(R.string.grudge_choose_victim_button_text);
+            }
+        } else if (requestCode == REQUEST_PHOTO) {
+            Uri uri = FileProvider.getUriForFile(getActivity(),
+                    "com.shaary.android.grudgeintent.fileprovider",
+                    photoFile);
+            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateGrudge();
+            updateGrudgeImage();
+        } else if (requestCode == REQUEST_DELETE_IMAGE) {
+            String delete = data.getStringExtra("delete");
+            if (delete.equals("delete")) {
+                photoFile.delete();
+                updateGrudgeImage();
+            }
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

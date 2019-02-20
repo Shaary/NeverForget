@@ -40,8 +40,6 @@ public class Grudge {
         return simpleDateFormat.format(date);
     }
 
-    //TODO: think about changing the structure: use int instead of UUID
-
     public void setId(long id) {
         this.id = id;
     }
