@@ -2,6 +2,7 @@ package com.shaary.neverforget.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
+import com.shaary.neverforget.viewModel.BasicFragmentVM;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,18 +24,21 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//Holds basic fragment
 public class GrudgePagerActivity extends AppCompatActivity
         implements GrudgeFragment.Callbacks{
 
     public static final String TAG = GrudgePagerActivity.class.getSimpleName();
 
     private static final String EXTRA_GRUDGE_ID = "com.shaary.android.grudgeintent.grudge_id";
+    private static final String DIALOG_DATE = "DialogDate";
 
     @BindView(R.id.grudge_view_pager) ViewPager viewPager;
     @BindView(R.id.grudge_first_button) Button toFirstButton;
     @BindView(R.id.grudge_last_button) Button toLastButton;
 
     private List<Grudge> grudges;
+    private BasicFragmentVM viewModel;
 
     public static Intent newIntent(Context packageContext, long grudgeId) {
         Intent intent = new Intent(packageContext, GrudgePagerActivity.class);
@@ -48,8 +53,9 @@ public class GrudgePagerActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         long grudgeId = getIntent().getLongExtra(EXTRA_GRUDGE_ID, 0);
+        //Creates viewModel for basic fragment
+        viewModel = new BasicFragmentVM(getApplicationContext(), grudgeId);
 
-        //grudges = GrudgePit.get(this).getGrudges();
         grudges = GrudgePit.getInstance(this).getGrudgeList();
         Log.d(TAG, "onCreate: pager grudges number " + grudges.size());
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -58,8 +64,9 @@ public class GrudgePagerActivity extends AppCompatActivity
             @Override
             public Fragment getItem(int position) {
                 Grudge grudge = grudges.get(position);
-                //return GrudgeFragment.newInstance(grudge.getId());
-                return BasicFragment.newInstance(grudge.getId());
+                BasicFragment basicFragment = BasicFragment.newInstance(grudge.getId());
+                basicFragment.setViewModel(viewModel);
+                return basicFragment;
             }
 
             @Override
@@ -115,4 +122,10 @@ public class GrudgePagerActivity extends AppCompatActivity
     public void onGrudgeUpdated(Grudge grudge) {
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

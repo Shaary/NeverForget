@@ -1,11 +1,13 @@
 package com.shaary.neverforget.controller;
 
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.view.InfoFragment;
@@ -28,6 +31,15 @@ import java.io.File;
  * A simple {@link Fragment} subclass.
  */
 public class BasicFragment extends Fragment {
+
+    private static final String ARG_EVENT_ID = "event_id";
+    private static final String DIALOG_DATE = "DialogDate";
+    public static final int REQUEST_DATE = 0;
+    public static final int REQUEST_CONTACT = 1;
+    public static final int REQUEST_PHOTO = 2;
+    public static final int REQUEST_PHOTO_AND_STORAGE = 3;
+    public static final int REQUEST_TIME = 5;
+    public static final int REQUEST_DELETE_IMAGE = 6;
 
     private static final String TAG = BasicFragment.class.getSimpleName();
     public static final String ARG_GRUDGE_ID = "grudge_id";
@@ -55,6 +67,8 @@ public class BasicFragment extends Fragment {
         binding.setEvent(viewModel);
         View view = binding.getRoot();
 
+        setUpDateButton(view);
+
         return view;
     }
 
@@ -64,11 +78,28 @@ public class BasicFragment extends Fragment {
 
         long grudgeId = getArguments().getLong(ARG_GRUDGE_ID);
         Log.d(TAG, "onCreate: grudge id " + grudgeId);
-        viewModel = new BasicFragmentVM(getContext(), grudgeId);
         grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
         photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
 
         setHasOptionsMenu(true);
+    }
+
+    //TODO: move to view model
+    private void setUpDateButton(View view) {
+        Button dateButton = view.findViewById(R.id.basic_date_button);
+        dateButton.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getFragmentManager();
+            DatePickerFragment dialog = DatePickerFragment
+                    .newInstance(grudge.getDate());
+
+            //Sets this fragment as a receiver of a picked date
+            dialog.setTargetFragment(BasicFragment.this, REQUEST_DATE);
+            dialog.show(fragmentManager, DIALOG_DATE);
+        });
+    }
+
+    public void setViewModel(BasicFragmentVM viewModel) {
+        this.viewModel = viewModel;
     }
 
     @Override
@@ -105,5 +136,10 @@ public class BasicFragment extends Fragment {
                 infoFragment.show(getFragmentManager(), "info");
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        viewModel.handleActivityresult(requestCode, resultCode, data);
     }
 }

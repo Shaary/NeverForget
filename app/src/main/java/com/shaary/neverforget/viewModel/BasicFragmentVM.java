@@ -1,14 +1,20 @@
 package com.shaary.neverforget.viewModel;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import com.shaary.neverforget.BR;
+import com.shaary.neverforget.controller.BasicFragment;
+import com.shaary.neverforget.controller.DatePickerFragment;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
+
+import java.util.Date;
 
 public class BasicFragmentVM extends BaseObservable {
 
@@ -78,6 +84,11 @@ public class BasicFragmentVM extends BaseObservable {
     }
 
     @Bindable
+    public String getDate() {
+        return grudge.getFormattedDate();
+    }
+
+    @Bindable
     public boolean getAction1() {
         return grudge.isRevenge();
     }
@@ -122,8 +133,19 @@ public class BasicFragmentVM extends BaseObservable {
         return false;
     }
 
-    //TODO: bind date
-    //TODO: set date onclick
+    public void handleActivityresult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == BasicFragment.REQUEST_DATE) {
+            Date date = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            grudge.setDate(date);
+            repository.updateGrudge(grudge);
+            notifyPropertyChanged(BR.date);
+        }
+    }
+
     //TODO: set time onclick
     //TODO: set name onclick
     //TODO: set picture onclick
