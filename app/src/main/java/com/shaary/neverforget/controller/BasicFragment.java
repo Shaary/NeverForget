@@ -19,19 +19,23 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.shaary.neverforget.R;
+import com.shaary.neverforget.model.Event;
+import com.shaary.neverforget.model.Gratitude;
+import com.shaary.neverforget.model.Grudge;
+import com.shaary.neverforget.view.GratitudeFragment;
 import com.shaary.neverforget.view.InfoFragment;
 import com.shaary.neverforget.view.VictimChooserDialogFragment;
 import com.shaary.neverforget.viewModel.BasicFragmentVM;
 import com.shaary.neverforget.databinding.FragmentBasicBinding;
-import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 
 import java.io.File;
+import java.lang.reflect.Type;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BasicFragment extends Fragment {
+public abstract class BasicFragment<T extends Event> extends Fragment {
 
     private static final String ARG_EVENT_ID = "event_id";
     private static final String DIALOG_DATE = "DialogDate";
@@ -46,25 +50,33 @@ public class BasicFragment extends Fragment {
     public static final String ARG_GRUDGE_ID = "grudge_id";
 
     private BasicFragmentVM viewModel;
-    private Grudge grudge;
+    private Event event;
     private File photoFile;
     private GrudgeFragment.Callbacks callbacks;
 
     //data binding
     FragmentBasicBinding binding;
 
-    public static BasicFragment newInstance(long grudgeId) {
+    public static BasicFragment newInstance(long eventId, Type type) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_GRUDGE_ID, grudgeId);
-
-        BasicFragment fragment = new BasicFragment();
-        fragment.setArguments(args);
+        args.putSerializable(ARG_GRUDGE_ID, eventId);
+        BasicFragment fragment;
+        if (type == Grudge.class) {
+            fragment =  new GrudgeFragment();
+        } else if (type == Gratitude.class) {
+            fragment = new GratitudeFragment();
+        } else {
+            fragment = null;
+        }
+        if (fragment != null) {
+            fragment.setArguments(args);
+        }
         return fragment;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basic, container, false);
+        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
         binding.setEvent(viewModel);
         View view = binding.getRoot();
 
@@ -75,14 +87,17 @@ public class BasicFragment extends Fragment {
         return view;
     }
 
+    public abstract int getLayoutId();
+    public abstract View provideFragmentView(LayoutInflater inflater,ViewGroup parent, Bundle savedInstanceState);
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         long grudgeId = getArguments().getLong(ARG_GRUDGE_ID);
-        Log.d(TAG, "onCreate: grudge id " + grudgeId);
-        grudge = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
-        photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(grudge);
+        Log.d(TAG, "onCreate: event id " + grudgeId);
+        event = GrudgePit.getInstance(getActivity()).getGrudge(grudgeId);
+        //photoFile = GrudgePit.getInstance(getActivity()).getPhotoFile(event);
 
         setHasOptionsMenu(true);
     }
@@ -93,7 +108,7 @@ public class BasicFragment extends Fragment {
         dateButton.setOnClickListener(v -> {
             FragmentManager fragmentManager = getFragmentManager();
             DatePickerFragment dialog = DatePickerFragment
-                    .newInstance(grudge.getDate());
+                    .newInstance(event.getDate());
 
             //Sets this fragment as a receiver of a picked date
             dialog.setTargetFragment(BasicFragment.this, REQUEST_DATE);
@@ -105,7 +120,7 @@ public class BasicFragment extends Fragment {
         Button timeButton = view.findViewById(R.id.basic_time_button);
         timeButton.setOnClickListener(v -> {
             DialogFragment newFragment = TimePickerFragment
-                    .newInstance(grudge.getTime());
+                    .newInstance(event.getTime());
             newFragment.setTargetFragment(BasicFragment.this, REQUEST_TIME);
             newFragment.show(getFragmentManager(), "timePicker");
 
@@ -118,7 +133,7 @@ public class BasicFragment extends Fragment {
     }
 
     private void openVictimChooserDialog() {
-        VictimChooserDialogFragment dialogFragment = VictimChooserDialogFragment.newInstance(grudge);
+        VictimChooserDialogFragment dialogFragment = VictimChooserDialogFragment.newInstance(event);
         dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
         dialogFragment.show(getFragmentManager(), "victim");
     }
@@ -152,7 +167,7 @@ public class BasicFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.grudge_delete:
-                GrudgePit.getInstance(getActivity()).deleteGrudgeById(grudge.getId());
+                GrudgePit.getInstance(getActivity()).deleteGrudgeById(event.getId());
                 getActivity().finish();
                 return true;
 

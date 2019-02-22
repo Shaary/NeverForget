@@ -7,6 +7,8 @@ import android.util.Log;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 
+import java.lang.reflect.Type;
+
 public class GrudgeListActivity extends SingleFragmentActivity
         implements GrudgeListFragment.Callbacks, GrudgeFragment.Callbacks{
 
@@ -24,13 +26,13 @@ public class GrudgeListActivity extends SingleFragmentActivity
     }
 
     @Override
-    public void onGrudgeSelected(long grudgeId) {
+    public void onGrudgeSelected(long grudgeId, Type type) {
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = GrudgePagerActivity.newIntent(this, grudgeId);
             startActivity(intent);
         } else {
             //Fragment newDetail = GrudgeFragment.newInstance(grudgeId);
-            Fragment newDetail = BasicFragment.newInstance(grudgeId);
+            Fragment newDetail = BasicFragment.newInstance(grudgeId, type);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_fragment_container, newDetail)

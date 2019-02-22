@@ -65,7 +65,7 @@ import butterknife.ButterKnife;
  */
 
 //Communicates with DatePickerFragment
-public class GrudgeFragment extends Fragment {
+public class GrudgeFragment extends BasicFragment<Grudge> {
 
     private static final String ARG_GRUDGE_ID = "grudge_id";
     private static final String DIALOG_DATE = "DialogDate";
@@ -297,6 +297,16 @@ public class GrudgeFragment extends Fragment {
         updateGrudgeImage();
         setLayout();
         return view;
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_grudge;
+    }
+
+    @Override
+    public View provideFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        return null;
     }
 
     private void setLayout() {

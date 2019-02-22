@@ -65,7 +65,7 @@ public class GrudgePagerActivity extends AppCompatActivity
             @Override
             public Fragment getItem(int position) {
                 Grudge grudge = grudges.get(position);
-                BasicFragment basicFragment = BasicFragment.newInstance(grudge.getId());
+                BasicFragment basicFragment = BasicFragment.newInstance(grudge.getId(), grudge.getClass());
                 basicFragment.setViewModel(viewModel);
                 return basicFragment;
             }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.model.Grudge;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrudgeViewHolder> {
@@ -21,7 +22,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
     private Listener listener;
 
     public interface Listener {
-        void onClick(long grudgeId);
+        void onClick(long grudgeId, Type type);
     }
 
     public MyGrudgeAdapter(List<Grudge> grudges, Listener listener) {
@@ -112,7 +113,7 @@ public class MyGrudgeAdapter extends RecyclerView.Adapter<MyGrudgeAdapter.MyGrud
 
         @Override
         public void onClick(View v) {
-            listener.onClick(grudge.getId());
+            listener.onClick(grudge.getId(), grudge.getClass());
             Log.d(TAG, "onClick: called ");
         }
     }

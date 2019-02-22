@@ -16,6 +16,7 @@ import android.widget.Switch;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.controller.GrudgeFragment;
+import com.shaary.neverforget.model.Event;
 import com.shaary.neverforget.model.Grudge;
 
 import butterknife.BindView;
@@ -33,11 +34,11 @@ public class VictimChooserDialogFragment extends DialogFragment {
 
     private String gender;
 
-    public static VictimChooserDialogFragment newInstance(Grudge grudge) {
+    public static VictimChooserDialogFragment newInstance(Event event) {
 
         Bundle args = new Bundle();
-        args.putString("victim", grudge.getName());
-        args.putString("gender", grudge.getGender());
+        args.putString("victim", event.getName());
+        args.putString("gender", event.getGender());
         VictimChooserDialogFragment fragment = new VictimChooserDialogFragment();
         fragment.setArguments(args);
         return fragment;

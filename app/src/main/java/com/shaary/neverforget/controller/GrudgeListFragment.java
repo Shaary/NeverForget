@@ -21,6 +21,7 @@ import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 import com.shaary.neverforget.view.MyGrudgeAdapter;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,12 +38,12 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
     private Callbacks callbacks;
 
     @Override
-    public void onClick(long grudgeId) {
-        callbacks.onGrudgeSelected(grudgeId);
+    public void onClick(long grudgeId, Type type) {
+        callbacks.onGrudgeSelected(grudgeId, type);
     }
 
     public interface Callbacks {
-        void onGrudgeSelected(long grudgeId);
+        void onGrudgeSelected(long grudgeId, Type type);
     }
 
     @Override
@@ -128,9 +129,10 @@ public class GrudgeListFragment extends Fragment implements MyGrudgeAdapter.List
             case R.id.new_grudge:
                 Grudge grudge = new Grudge();
                 long id = GrudgePit.getInstance(getActivity()).addGrudge(grudge);
+                Type type = grudge.getClass();
                 Log.d(TAG, "onOptionsItemSelected: new grudge id " + id);
                 updateUI();
-                callbacks.onGrudgeSelected(id);
+                callbacks.onGrudgeSelected(id, type);
                 return true;
 
             case R.id.show_subtitle:
