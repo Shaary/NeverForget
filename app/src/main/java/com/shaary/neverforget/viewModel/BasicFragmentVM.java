@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 
 import com.shaary.neverforget.BR;
 import com.shaary.neverforget.controller.BasicFragment;
 import com.shaary.neverforget.controller.DatePickerFragment;
+import com.shaary.neverforget.controller.TimePickerFragment;
 import com.shaary.neverforget.model.Grudge;
 import com.shaary.neverforget.model.GrudgePit;
 
@@ -55,15 +58,10 @@ public class BasicFragmentVM extends BaseObservable {
 
     @Bindable
     public String getName() {
-        String name = "";
-        if (grudge.getVictim() != null) {
-            if (!grudge.getVictim().isEmpty()) {
-                name = grudge.getVictim();
-            }
-        } else {
-            name = "OFFENDER'S NAME";
+        if (grudge.getVictim().isEmpty()) {
+            return "OFFENDER'S NAME";
         }
-        return name;
+        return grudge.getVictim();
     }
 
     public void setName(String name) {
@@ -133,7 +131,7 @@ public class BasicFragmentVM extends BaseObservable {
         return false;
     }
 
-    public void handleActivityresult(int requestCode, int resultCode, Intent data) {
+    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -143,11 +141,35 @@ public class BasicFragmentVM extends BaseObservable {
             grudge.setDate(date);
             repository.updateGrudge(grudge);
             notifyPropertyChanged(BR.date);
+        } else if (requestCode == BasicFragment.REQUEST_TIME) {
+            int hour = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_HOUR);
+            int minute = (int) data.getSerializableExtra(TimePickerFragment.EXTRA_MINUTE);
+            grudge.setTime(hour, minute);
+            repository.updateGrudge(grudge);
+            notifyPropertyChanged(BR.time);
+        } else if (requestCode == BasicFragment.REQUEST_CONTACT && data != null){
+            String name = data.getStringExtra("victim");
+            grudge.setGender(data.getStringExtra("gender"));
+            grudge.setVictim(name);
+            repository.updateGrudge(grudge);
+            notifyPropertyChanged(BR.name);
+        } else if (requestCode == BasicFragment.REQUEST_PHOTO) {
+            Uri uri = FileProvider.getUriForFile(context,
+                    "com.shaary.android.grudgeintent.fileprovider",
+                    repository.getPhotoFile(grudge));
+            context.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            repository.updateGrudge(grudge);
+            //updateGrudgeImage();
+        } else if (requestCode == BasicFragment.REQUEST_DELETE_IMAGE) {
+            String delete = data.getStringExtra("delete");
+            if (delete.equals("delete")) {
+//                photoFile.delete();
+//                updateGrudgeImage();
+            }
         }
     }
 
-    //TODO: set time onclick
-    //TODO: set name onclick
+    //TODO: move onclick to view model
     //TODO: set picture onclick
     //TODO: set background
 

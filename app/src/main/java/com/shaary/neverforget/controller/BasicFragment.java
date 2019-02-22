@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.shaary.neverforget.R;
 import com.shaary.neverforget.view.InfoFragment;
+import com.shaary.neverforget.view.VictimChooserDialogFragment;
 import com.shaary.neverforget.viewModel.BasicFragmentVM;
 import com.shaary.neverforget.databinding.FragmentBasicBinding;
 import com.shaary.neverforget.model.Grudge;
@@ -68,6 +69,8 @@ public class BasicFragment extends Fragment {
         View view = binding.getRoot();
 
         setUpDateButton(view);
+        setUpTimeButton(view);
+        setUpNameButton(view);
 
         return view;
     }
@@ -96,6 +99,28 @@ public class BasicFragment extends Fragment {
             dialog.setTargetFragment(BasicFragment.this, REQUEST_DATE);
             dialog.show(fragmentManager, DIALOG_DATE);
         });
+    }
+
+    private void setUpTimeButton(View view) {
+        Button timeButton = view.findViewById(R.id.basic_time_button);
+        timeButton.setOnClickListener(v -> {
+            DialogFragment newFragment = TimePickerFragment
+                    .newInstance(grudge.getTime());
+            newFragment.setTargetFragment(BasicFragment.this, REQUEST_TIME);
+            newFragment.show(getFragmentManager(), "timePicker");
+
+        });
+    }
+
+    private void setUpNameButton(View view) {
+        Button nameButton = view.findViewById(R.id.basic_person_button);
+        nameButton.setOnClickListener(v -> openVictimChooserDialog());
+    }
+
+    private void openVictimChooserDialog() {
+        VictimChooserDialogFragment dialogFragment = VictimChooserDialogFragment.newInstance(grudge);
+        dialogFragment.setTargetFragment(this, REQUEST_CONTACT);
+        dialogFragment.show(getFragmentManager(), "victim");
     }
 
     public void setViewModel(BasicFragmentVM viewModel) {
@@ -140,6 +165,6 @@ public class BasicFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        viewModel.handleActivityresult(requestCode, resultCode, data);
+        viewModel.handleActivityResult(requestCode, resultCode, data);
     }
 }

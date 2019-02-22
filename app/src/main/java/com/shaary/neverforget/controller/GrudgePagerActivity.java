@@ -46,6 +46,7 @@ public class GrudgePagerActivity extends AppCompatActivity
         return intent;
     }
 
+    //TODO: fix pagination
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

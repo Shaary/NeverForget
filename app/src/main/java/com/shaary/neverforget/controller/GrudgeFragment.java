@@ -447,7 +447,6 @@ public class GrudgeFragment extends Fragment {
         } else if (requestCode == REQUEST_CONTACT && data != null){
             String name = data.getStringExtra("victim");
             grudge.setGender(data.getStringExtra("gender"));
-
             grudge.setVictim(name);
             updateGrudge();
             if (name != null && name.length() > 0) {
