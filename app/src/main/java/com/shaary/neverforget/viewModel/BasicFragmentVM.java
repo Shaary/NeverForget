@@ -58,14 +58,14 @@ public class BasicFragmentVM extends BaseObservable {
 
     @Bindable
     public String getName() {
-        if (grudge.getVictim().isEmpty()) {
+        if (grudge.getName() == null || grudge.getName().isEmpty()) {
             return "OFFENDER'S NAME";
         }
-        return grudge.getVictim();
+        return grudge.getName();
     }
 
     public void setName(String name) {
-        grudge.setVictim(name);
+        grudge.setName(name);
         repository.updateGrudge(grudge);
         notifyPropertyChanged(BR.name);
     }
@@ -150,7 +150,7 @@ public class BasicFragmentVM extends BaseObservable {
         } else if (requestCode == BasicFragment.REQUEST_CONTACT && data != null){
             String name = data.getStringExtra("victim");
             grudge.setGender(data.getStringExtra("gender"));
-            grudge.setVictim(name);
+            grudge.setName(name);
             repository.updateGrudge(grudge);
             notifyPropertyChanged(BR.name);
         } else if (requestCode == BasicFragment.REQUEST_PHOTO) {

@@ -171,9 +171,9 @@ public class GrudgeFragment extends Fragment {
 
         victimButton.setOnClickListener(v -> openVictimChooserDialog());
 
-        if (grudge.getVictim() != null) {
-            if (!grudge.getVictim().isEmpty()) {
-                victimButton.setText(grudge.getVictim());
+        if (grudge.getName() != null) {
+            if (!grudge.getName().isEmpty()) {
+                victimButton.setText(grudge.getName());
             }
         }
 
@@ -215,7 +215,7 @@ public class GrudgeFragment extends Fragment {
             startActivity(intent);
 
             //If victim's name == null asks if it was left blank intentionally
-            if (grudge.getVictim() == null || grudge.getVictim().isEmpty()) {
+            if (grudge.getName() == null || grudge.getName().isEmpty()) {
                 TSnackbar snackbar = TSnackbar.make(getActivity()
                                 .findViewById(R.id.fragment_grudge_relative_layout),
                         R.string.no_name_string, Snackbar.LENGTH_LONG);
@@ -385,7 +385,7 @@ public class GrudgeFragment extends Fragment {
         }
         String date = grudge.getFormattedDate();
         String time = grudge.getTime();
-        String name = grudge.getVictim();
+        String name = grudge.getName();
         if (name == null) {
             name = getString(R.string.default_name);
         }
@@ -447,7 +447,7 @@ public class GrudgeFragment extends Fragment {
         } else if (requestCode == REQUEST_CONTACT && data != null){
             String name = data.getStringExtra("victim");
             grudge.setGender(data.getStringExtra("gender"));
-            grudge.setVictim(name);
+            grudge.setName(name);
             updateGrudge();
             if (name != null && name.length() > 0) {
                 Log.d(TAG, "onActivityResult if: set name " + name);

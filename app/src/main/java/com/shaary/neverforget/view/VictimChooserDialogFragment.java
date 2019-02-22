@@ -36,7 +36,7 @@ public class VictimChooserDialogFragment extends DialogFragment {
     public static VictimChooserDialogFragment newInstance(Grudge grudge) {
 
         Bundle args = new Bundle();
-        args.putString("victim", grudge.getVictim());
+        args.putString("victim", grudge.getName());
         args.putString("gender", grudge.getGender());
         VictimChooserDialogFragment fragment = new VictimChooserDialogFragment();
         fragment.setArguments(args);

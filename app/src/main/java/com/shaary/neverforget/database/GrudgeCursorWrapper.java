@@ -40,7 +40,7 @@
 //        grudge.setRevenge(isRevenge != 0);
 //        grudge.setRevenged(isRevenged != 0);
 //        grudge.setForgiven(isForgive != 0);
-//        grudge.setVictim(victim);
+//        grudge.setName(victim);
 //        grudge.setDescription(description);
 //        grudge.setGender(gender);
 //
